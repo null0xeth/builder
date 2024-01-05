@@ -3,8 +3,16 @@ flake.nixosModules.byosBuilder = moduleWithSystem (
   perSystem@{ self' }:
   { config, lib, ...}:
 with lib; let
-  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  cfg = config.presets.${filterfunc config.presets};
+  #filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  #cfg = config.presets.${filterfunc config.presets};
+
+  cfg1 = config.presets;
+  allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
+  activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
+  activePresetNames = builtins.attrValues (builtins.mapAttrs(_: config: config.name) activePresets);
+  cfg = cfg1.activePresetNames;
+  #presetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
+
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
@@ -591,7 +599,7 @@ with lib; let
           optionals = {
             enable = false;
           };
-        }; 
+        };
       })
 
       (mkIf (!cfg.builder.hardware.serverMode) {
