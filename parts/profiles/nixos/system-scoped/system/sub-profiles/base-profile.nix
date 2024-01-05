@@ -17,7 +17,7 @@ in {
   imports = [
     ./utils
     ./firmware
-    ./networking
+    #./networking
     ./submodules
   ];
 

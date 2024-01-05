@@ -1,3 +1,6 @@
 {
-  imports = [./sub-profiles/base-profile.nix];
+  imports = [
+    ./sub-profiles/base-profile.nix
+    ./sub-profiles/networking/default.nix
+  ];
 }
