@@ -9,7 +9,6 @@ with lib; let
 in {
   options.modules.kernel.general = {
     enable = mkEnableOption "the general kernel configuration module";
-    serverMode = mkEnableOption "";
     useLatest = mkEnableOption "the latest kernel packages";
     kernelPackages = mkOption {
       type = types.nullOr types.raw;

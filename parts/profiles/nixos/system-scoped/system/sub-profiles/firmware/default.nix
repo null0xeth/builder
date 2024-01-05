@@ -13,11 +13,11 @@ in {
       enable = mkEnableOption "enable automatic firmware updates";
     };
 
-    packages = mkOption {
-      type = with types; listOf package;
-      default = [];
-      description = mdDoc "Firmware packages to install";
-    };
+    # packages = mkOption {
+    #   type = with types; listOf package;
+    #   default = [];
+    #   description = mdDoc "Firmware packages to install";
+    # };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -26,7 +26,6 @@ in {
       hardware = {
         enableAllFirmware = mkDefault true;
         enableRedistributableFirmware = mkDefault true;
-        firmware = cfg.packages;
       };
       services.sysprof.enable = true; # system profiler
     }

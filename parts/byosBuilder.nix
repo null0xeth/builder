@@ -1,6 +1,6 @@
 {moduleWithSystem, ...}: {
 flake.nixosModules.byosBuilder = moduleWithSystem (
-  perSystem@{ config, ... }:
+  perSystem@{ self' }:
   { config, lib, ...}:
 with lib; let
   filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
@@ -12,12 +12,7 @@ with lib; let
   };
 
   # QuickNav:
-  hwCfg = cfg.builder.hardware;
-  kernCfg = cfg.builder.kernel;
-  fxCfg = cfg.builder.graphical;
-  sysCfg = cfg.builder.system;
-  secCfg = cfg.builder.security;
-in {
+  in {
   imports = [
     ./profiles/nixos/system-scoped
   ];
@@ -26,7 +21,6 @@ in {
     type = types.attrsOf (types.submodule {
       options = {
         enable = mkEnableOption "the preset builder";
-        serverMode = mkEnableOption "";
         name = mkOption {
           type = types.str;
           description = mdDoc "The slug used to refer to preset";
@@ -38,6 +32,7 @@ in {
               networking = mkOption {
                 type = types.submodule {
                   options = {
+                    enable = mkEnableOption "tba";
                     hostName = mkOption {
                       type = types.str;
                       description = mdDoc "The hostname of the to-be configured system";
@@ -53,13 +48,10 @@ in {
               fromHardwareConfig = mkOption {
                 type = types.submodule {
                   options = {
-                    _completed = mkOption {
-                      readOnly = true;
-                      default = (cfg.builder.fromHardwareConfig.kernelModules != null) && (cfg.builder.fromHardwareConfig.initrd.availableKernelModules != null);
-                    };
+                    enable = mkEnableOption "tba";
                     hostArch = mkOption {
                       type = types.str;
-                      default = "x86_64-linux"; 
+                      default = "x86_64-linux";
                     };
                     kernelModules = mkOption {
                       type = types.nullOr (types.listOf types.str);
@@ -94,13 +86,15 @@ in {
               hardware = mkOption {
                 type = types.submodule {
                   options = {
-                    serverMode = mkOption {
-                      type = types.bool;
-                      default = cfg.serverMode;
-                    };
+                    enable = mkEnableOption "tba";
+                    serverMode = mkEnableOption "tba";
                     basics = mkOption {
                       type = types.submodule {
                         options = {
+                          enable = mkOption {
+                            type = types.bool;
+                            default = !cfg.builder.hardware.serverMode;
+                          };
                           audio = mkOption {
                             type = enableModule;
                           };
@@ -117,6 +111,10 @@ in {
                     cpu = mkOption {
                       type = types.submodule {
                         options = {
+                          enable = mkOption {
+                            type = types.bool;
+                            default = !cfg.builder.hardware.serverMode;
+                          };
                           brand = mkOption {
                             type = types.enum ["intel" "amd"];
                             default = "intel";
@@ -134,7 +132,7 @@ in {
                             description = mdDoc "The type of CPU installed [desktop|mobile]";
                             default = "mobile";
                           };
-                          useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
+                          #useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
                         };
                       };
                     };
@@ -142,6 +140,10 @@ in {
                     functionality = mkOption {
                       type = types.submodule {
                         options = {
+                          enable = mkOption {
+                            type = types.bool;
+                            default = !cfg.builder.hardware.serverMode;
+                          };
                           thunderbolt = mkOption {
                             type = enableModule;
                           };
@@ -161,14 +163,24 @@ in {
               kernel = mkOption {
                 type = types.submodule {
                   options = {
+                    enable = mkEnableOption "tba";
                     settings = mkOption {
                       type = types.submodule {
                         options = {
+                          enable = mkOption {
+                            type = types.bool;
+                            default = cfg.builder.kernel.enable;
+                          };
                           useLatest = mkEnableOption "the latest kernel packages";
                           kernelPackages = mkOption {
                             type = types.nullOr types.raw;
                             description = "If `useLatest` is disabled, specify the packages here";
                             default = null;
+                          };
+                          kernelModules = mkOption {
+                            type = types.listOf types.str;
+                            description = "Kernel modules to be installed";
+                            default = [];
                           };
                           kernelParams = mkOption {
                             type = types.submodule {
@@ -313,63 +325,72 @@ in {
                   };
                 };
               };
-
+              # Checked and ok.
               graphical = mkOption {
                 type = types.submodule {
                   options = {
+                    enable = mkEnableOption "tba";
+                    name = mkOption {
+                      type = types.str;
+                      default = "${cfg.name}";
+                    };
+                    base = mkOption {
+                      type = types.enum ["gtk"];
+                      description = mdDoc "The base layer used for rendering the system's gui";
+                      default = "gtk";
+                    };
                     settings = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkEnableOption "";
-                          base = mkOption {
-                            type = types.enum ["gtk"];
-                            description = mdDoc "The base layer used for rendering the system's gui";
-                            default = "gtk";
+                          system = mkOption {
+                            type = types.submodule {
+                              options = {
+                                dbus = mkOption {
+                                  type = enableModule;
+                                };
+                              };
+                            };
                           };
-                          dbus = mkOption {
-                            type = enableModule;
-                          };
-                        };
-                      };
-                    };
-
-                    xserver = mkOption {
-                      type = types.submodule {
-                        options = {
-                          base = mkOption {
+                          xserver = mkOption {
                             type = types.submodule {
                               options = {
                                 enable = mkEnableOption "xserver";
-                                exportConfiguration = mkOption {
-                                  type = enableModule;
-                                };
-                                hyperlandSupport = mkOption {
-                                  type = enableModule;
+                                extra = mkOption {
+                                  type = types.submodule {
+                                    options = {
+                                      exportConfiguration = mkOption {
+                                        type = enableModule;
+                                      };
+                                      hyperlandSupport = mkOption {
+                                        type = enableModule;
+                                      };
+                                    };
+                                  };
                                 };
                                 libinput = mkOption {
                                   type = enableModule;
                                 };
-                              };
-                            };
-                          };
-                          desktopManager = mkOption {
-                            type = types.submodule {
-                              options = {
-                                enable = mkEnableOption "enable the desktopmanager module";
-                                active = mkOption {
-                                  type = types.enum ["gnome" "none"];
-                                  default = "none";
+                                desktopManager = mkOption {
+                                  type = types.submodule {
+                                    options = {
+                                      enable = mkEnableOption "enable the desktopmanager module";
+                                      active = mkOption {
+                                        type = types.enum ["gnome" "none"];
+                                        default = "none";
+                                      };
+                                    };
+                                  };
                                 };
-                              };
-                            };
-                          };
-                          displayManager = mkOption {
-                            type = types.submodule {
-                              options = {
-                                enable = mkEnableOption "enable the displaymanager module";
-                                active = mkOption {
-                                  type = types.enum ["gdm" "none"];
-                                  default = "none";
+                                displayManager = mkOption {
+                                  type = types.submodule {
+                                    options = {
+                                      enable = mkEnableOption "enable the displaymanager module";
+                                      active = mkOption {
+                                        type = types.enum ["gdm" "none"];
+                                        default = "none";
+                                      };
+                                    };
+                                  };
                                 };
                               };
                             };
@@ -384,19 +405,28 @@ in {
               system = mkOption {
                 type = types.submodule {
                   options = {
-                    firmware = mkOption {
+                    enable = mkEnableOption "tba";
+                    profile = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkEnableOption "the firmware configuration module";
-                          fwupd = mkEnableOption "";
-                          serverMode = mkOption {
-                            type = types.bool;
-                            default = cfg.serverMode;
-                          };
-                          packages = mkOption {
-                            type = with types; nullOr (listOf package);
-                            description = mdDoc "Firmware packages to be installed";
-                            default = null;
+                          firmware = mkOption {
+                            type = types.submodule {
+                              options = {
+                                enable = mkEnableOption "the firmware configuration module";
+                                automatic-updates = mkOption {
+                                  type = types.submodule {
+                                    options = {
+                                      enable = mkEnableOption "enable automatic firmware updates";
+                                    };
+                                  };
+                                };
+                                # packages = mkOption {
+                                #   type = with types; nullOr raw;
+                                #   description = mdDoc "Firmware packages to be installed";
+                                #   default = null;
+                                # };
+                              };
+                            };
                           };
                         };
                       };
@@ -432,7 +462,7 @@ in {
                       };
                     };
 
-                    utilities = mkOption {
+                    sysutils = mkOption {
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "the system utilities module";
@@ -464,6 +494,7 @@ in {
               security = mkOption {
                 type = types.submodule {
                   options = {
+                    enable = mkEnableOption "tba";
                     modules = mkOption {
                       type = types.submodule {
                         options = {
@@ -520,219 +551,172 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    # Initial assertions:
     {
       assertions = [
         {
           assertion = cfg.name != null;
           message = "Preset name cannot be omitted.";
         }
-        {
-          assertion = cfg.builder.fromHardwareConfig._completed;
-          message = "Please fill in all fields under `builder.fromHardwareConfig`";
-        }
-      ];
-
-      # Networking:
+             ];
+    }
+    # Networking:
+    (mkIf cfg.builder.networking.enable {
       profiles.networking.preset.${cfg.name} = {
         enable = true;
-        hostName = cfg.builder.networking.hostName;
-        extraHosts = cfg.builder.networking.extraHosts;
-        serverMode = true;
+        hostName = mkIf (cfg.builder.networking.hostName != null) cfg.builder.networking.hostName;
+        extraHosts = mkIf (cfg.builder.networking.extraHosts != null) cfg.builder.networking.extraHosts;
       };
+    })
 
-      # FileSystems:
+    # FS:
+    (mkIf cfg.builder.fromHardwareConfig.enable {
       inherit (cfg.builder.fromHardwareConfig) fileSystems swapDevices;
-      
-      # Host:
       nixpkgs.hostPlatform = mkDefault "${cfg.builder.fromHardwareConfig.hostArch}";
+    })
 
-      # Hardware:
-      profiles.hardware.preset.${cfg.name} = {
-        enable = true;
-        name = "${cfg.name}";
-        serverMode = hwCfg.serverMode;
-        profile = {
-          cpu = {
-            brand = hwCfg.cpu.brand;
-            generation = hwCfg.cpu.generation;
-            sub-type = hwCfg.cpu.sub-type;
-          };
-          # TODO: fix later
-          gpu = {
-            type = "cpu";
-          };
-        };
-        core = {
-          audio.enable = hwCfg.basics.audio.enable;
-          bluetooth.enable = hwCfg.basics.bluetooth.enable;
-          storage.enable = hwCfg.basics.storage.enable;
-        };
-        optionals = {
-          thunderbolt.enable = hwCfg.functionality.thunderbolt.enable;
-          sensors.enable = hwCfg.functionality.sensors.enable;
-          peripherals.logitech.enable = hwCfg.functionality.logitech.enable;
-        };
-      };
-
-      # Kernel:
-      profiles.kernel.preset.${cfg.name} = {
-        enable = true;
-        name = "${cfg.name}";
-        general = {
+    # HW:
+    (mkIf cfg.builder.hardware.enable (mkMerge [
+      (mkIf cfg.builder.hardware.serverMode {
+        profiles.hardware.preset.${cfg.name} = {
           enable = true;
-          useLatest = kernCfg.settings.useLatest;
-          kernelPackages = kernCfg.settings.kernelPackages;
-          kernelModules = kernCfg.boot.stages.stage2.kernelModules;
-
-          kernelParams = {
-            useDefaults = kernCfg.settings.kernelParams.useDefaults;
-            customParams = kernCfg.settings.kernelParams.customParams;
-          };
-          #};
-          initrd = {
-            systemd.enable = kernCfg.boot.stages.stage1.initrd.systemd.enable;
-            kernelModules = kernCfg.boot.stages.stage1.initrd.kernelModules;
-            availableKernelModules = kernCfg.boot.stages.stage1.initrd.availableKernelModules;
-          };
-        };
-
-        tweaks = {
-          networking.enable = kernCfg.tweaks.networking.enable;
-          hardening.enable = kernCfg.tweaks.hardening.enable;
-          failsaves.enable = kernCfg.tweaks.failsaves.enable;
-          clean.enable = kernCfg.tweaks.clean.enable;
-        };
-
-        boot = {
-          enable = true;
-          general = {
-            silent = {
-              enable = kernCfg.boot.settings.general.silent;
-            };
-          };
-
-          tmpfs = {
-            enable = kernCfg.boot.settings.tmpfs.enable;
-            size = kernCfg.boot.settings.tmpfs.size;
-          };
-
-          loader = {
-            systemd = {
-              enable = kernCfg.boot.settings.loader.systemd-boot.enable;
-              configurationLimit = kernCfg.boot.settings.loader.systemd-boot.configurationLimit;
-            };
-
-            settings = {
-              timeout = kernCfg.boot.settings.loader.timeout;
-              efiSupport.enable = kernCfg.boot.settings.loader.efiSupport.enable;
-              copyToTmpfs.enable = kernCfg.boot.settings.loader.copyToTmpfs.enable;
-            };
-          };
-        };
-        optionals = {
-          ricemyttydotcom = {
-            enable = true;
-          };
-        };
-      };
-
-      # Graphical:
-      profiles.graphical.preset.${cfg.name} = {
-        enable = fxCfg.enable;
-        name = "${cfg.name}";
-        base = fxCfg.settings.base;
-
-        settings = {
-          system = {
-            dbus = {
-              enable = fxCfg.settings.dbus.enable;
-            };
-            xserver = {
-              enable = fxCfg.xserver.base.enable;
+          name = "${cfg.name}";
+          profile = {
+            cpu = {
+              enable = false;
             };
           };
           core = {
-            desktopManager = {
-              enable = fxCfg.xserver.desktopManager.enable;
-              active = fxCfg.xserver.desktopManager.active;
-            };
-            displayManager = {
-              enable = fxCfg.xserver.displayManager.enable;
-              active = fxCfg.xserver.displayManager.active;
-            };
-            libinput = {
-              enable = fxCfg.xserver.base.libinput.enable;
-            };
-            extra = {
-              hyperlandSupport = {
-                enable = fxCfg.xserver.base.hyperlandSupport.enable;
-              };
-              exportConfiguration = {
-                enable = fxCfg.xserver.base.exportConfiguration.enable;
-              };
-            };
+            enable = false;
           };
-        };
-      };
+          optionals = {
+            enable = false;
+          };
+        }; 
+      })
 
-      # System:
-      profiles.system.preset.${cfg.name} = {
+      (mkIf (!cfg.builder.hardware.serverMode) {
+        profiles.hardware.preset.${cfg.name} = {
         enable = true;
         name = "${cfg.name}";
         profile = {
-          serverMode = sysCfg.serverMode;
-          firmware = {
-            automatic-updates.enable = sysCfg.firmware.fwupd;
-            enable = sysCfg.firmware.enable;
-          };
+          inherit (cfg.builder.hardware) cpu;
         };
-        fonts = {
-          enable = sysCfg.fonts.enable;
-          packages = sysCfg.fonts.packages;
-          defaults = {
-            serif = sysCfg.fonts.defaults.serif;
-            sansSerif = sysCfg.fonts.defaults.sansSerif;
-            monospace = sysCfg.fonts.defaults.monospace;
-            emoji = sysCfg.fonts.defaults.emoji;
-          };
+        core = {
+          inherit (cfg.builder.hardware.basics) audio bluetooth storage;
         };
-        sysutils = {
-          enable = sysCfg.utilities.enable;
-          tools = {
-            common.enable = sysCfg.utilities.tools.common.enable;
-            direnv.enable = sysCfg.utilities.tools.direnv.enable;
-            envfs.enable = sysCfg.utilities.tools.envfs.enable;
-            ld.enable = sysCfg.utilities.tools.ld.enable;
+        optionals = {
+          inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
+          peripherals.logitech = {
+            inherit (cfg.builder.hardware.functionality.logitech) enable;
           };
         };
       };
+      })
+    ]))
 
-      profiles.security.preset.${cfg.name} = {
-        enable = true;
-        modules = {
-          agenix = {
-            enable = secCfg.modules.agenix.enable;
+    # Kernel:
+    (mkIf cfg.builder.kernel.enable {
+        profiles.kernel.preset.${cfg.name} = {
+          enable = true;
+          name = "${cfg.name}";
+          general = {
+            inherit (cfg.builder.kernel.settings) enable useLatest kernelPackages kernelModules;
+
+            kernelParams = {
+              inherit (cfg.builder.kernel.settings.kernelParams) useDefaults customParams;
+            };
+            initrd = {
+              inherit (cfg.builder.kernel.boot.stages.stage1.initrd) kernelModules availableKernelModules systemd;
+                          };
           };
-          yubikey = {
-            enable = secCfg.modules.yubikey.enable;
-            settings = {
-              configuration = {
-                idVendor = secCfg.modules.yubikey.settings.configuration.idVendor;
-                idProduct = secCfg.modules.yubikey.settings.configuration.idProduct;
+
+          tweaks = {
+            inherit (cfg.builder.kernel.tweaks) networking hardening failsaves clean;
+          };
+
+          boot = {
+            enable = true;
+
+            general = {
+              silent = {
+                enable = cfg.builder.kernel.boot.settings.general.silent;
               };
-              udev = {
-                enable = secCfg.modules.yubikey.settings.udev.enable;
+            };
+            tmpfs = {
+              inherit (cfg.builder.kernel.boot.settings.tmpfs) enable size;
+            };
+
+            loader = {
+              systemd = {
+                inherit (cfg.builder.kernel.boot.settings.loader.systemd-boot) enable configurationLimit;
               };
-              touchDetector = {
-                enable = secCfg.modules.yubikey.settings.touchDetector.enable;
+
+              settings = {
+                inherit (cfg.builder.kernel.boot.settings.loader) timeout efiSupport copyToTmpfs;
               };
             };
           };
+          optionals = {
+            ricemyttydotcom = {
+              enable = true;
+            };
+          };
         };
-      };
+      })
+
+      # Graphics:
+      (mkIf cfg.builder.graphical.enable {
+        profiles.graphical.preset.${cfg.name} = {
+          inherit (cfg.builder.graphical) enable name base;
+          settings = {
+            inherit (cfg.builder.graphical.settings) system;
+            xserver = {
+              inherit (cfg.builder.graphical.settings.xserver)
+                enable
+                extra
+                libinput
+                desktopManager
+                displayManager;
+            };
+          };
+        };
+      })
+
+      # System:
+      (mkIf cfg.builder.system.enable (mkMerge [
+        {
+          profiles.system.preset.${cfg.name} = {
+            enable = true;
+            name = "${cfg.name}";
+          };
+        }
+
+        (mkIf cfg.builder.system.profile.firmware.enable {
+          profiles.system.preset.${cfg.name} = {
+              inherit (cfg.builder.system) profile;
+          };
+        })
+        (mkIf cfg.builder.system.fonts.enable {
+          profiles.system.preset.${cfg.name} = {
+            inherit (cfg.builder.system) fonts;
+          };
+        })
+        (mkIf cfg.builder.system.sysutils.enable {
+          profiles.system.preset.${cfg.name} = {
+            inherit (cfg.builder.system) sysutils;
+          };
+        })
+      ]))
+
+      # Security:
+      (mkIf cfg.builder.security.enable (mkMerge [
+        {
+          profiles.security.preset.${cfg.name} = {
+            inherit (cfg.builder.security) enable modules;
+          };
+        }
+      ]))
+      ]);
     }
-  ]);
-}
 );
 }

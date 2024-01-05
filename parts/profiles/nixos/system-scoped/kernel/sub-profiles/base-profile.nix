@@ -39,7 +39,6 @@ with lib; let
       };
 
       enable = mkEnableOption "the default kernel profile template";
-      serverMode = mkEnableOption "";
       general = mkOption {
         type = types.submodule {
           options = {

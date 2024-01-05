@@ -40,15 +40,13 @@ in {
                       dbus = mkOption {
                         type = enableModule;
                       };
-                      xserver = mkOption {
-                        type = enableModule;
-                      };
                     };
                   };
                 };
-                core = mkOption {
+                xserver = mkOption {
                   type = types.submodule {
                     options = {
+                      enable = mkEnableOption "tba";
                       desktopManager = mkOption {
                         type = types.submodule {
                           options = {
@@ -119,7 +117,7 @@ in {
       };
     })
 
-    (mkIf cfg.settings.system.xserver.enable (mkMerge [
+    (mkIf cfg.settings.xserver.enable (mkMerge [
       {
         services.xserver = {
           enable = true;
@@ -129,7 +127,7 @@ in {
         xdg.portal.enable = true;
       }
 
-      (mkIf cfg.settings.core.desktopManager.enable {
+      (mkIf cfg.settings.xserver.desktopManager.enable {
         services.xserver = {
           desktopManager = {
             gnome = {
@@ -139,8 +137,8 @@ in {
         };
       })
 
-      (mkIf cfg.settings.core.displayManager.enable (mkMerge [
-        (mkIf cfg.settings.core.extra.hyperlandSupport.enable {
+      (mkIf cfg.settings.xserver.displayManager.enable (mkMerge [
+        (mkIf cfg.settings.xserver.extra.hyperlandSupport.enable {
           services.xserver = {
             displayManager = {
               sessionPackages = [inputs.hyprland.packages.x86_64-linux.default];
@@ -148,10 +146,10 @@ in {
           };
         })
 
-        (mkIf (cfg.settings.core.displayManager.active == "gdm") {
+        (mkIf (cfg.settings.xserver.displayManager.active == "gdm") {
           assertions = [
             {
-              assertion = (cfg.base == "gtk") && (cfg.settings.core.displayManager.active == "gdm");
+              assertion = (cfg.base == "gtk") && (cfg.settings.xserver.displayManager.active == "gdm");
               message = "Please set `base` to `gtk` in order to use `gdm` as displaymanager.";
             }
           ];
@@ -169,7 +167,7 @@ in {
         })
       ]))
 
-      (mkIf cfg.settings.core.extra.exportConfiguration.enable {
+      (mkIf cfg.settings.xserver.extra.exportConfiguration.enable {
         services.xserver = {
           exportConfiguration = true;
         };
@@ -181,7 +179,7 @@ in {
         };
       })
 
-      (mkIf cfg.settings.core.libinput.enable {
+      (mkIf cfg.settings.xserver.libinput.enable {
         services.xserver = {
           libinput = {
             enable = true;

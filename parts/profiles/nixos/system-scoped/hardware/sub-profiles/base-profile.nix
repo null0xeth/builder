@@ -24,7 +24,6 @@ in {
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the base hardware profile";
-          serverMode = mkEnableOption "";
           name = mkOption {
             type = types.str;
             description = mdDoc "The slug used to refer to this profile";
@@ -36,6 +35,7 @@ in {
                 cpu = mkOption {
                   type = types.submodule {
                     options = {
+                      enable = mkEnableOption "tba";
                       brand = mkOption {
                         type = types.enum ["intel" "amd"];
                         description = mdDoc "The manufacturer of your CPU";
@@ -72,6 +72,7 @@ in {
           core = mkOption {
             type = types.submodule {
               options = {
+                enable = mkEnableOption "tba";
                 audio = mkOption {
                   type = enableModule;
                 };
@@ -88,6 +89,7 @@ in {
           optionals = mkOption {
             type = types.submodule {
               options = {
+                enable = mkEnableOption "tba";
                 thunderbolt = mkOption {
                   type = enableModule;
                 };
@@ -112,63 +114,35 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.serverMode {
-      modules.hardware = {
-        core = {
-          enable = false;
-          settings = {
-            audio.enable = false;
-            bluetooth.enable = false;
-            storage.enable = false;
-          };
-        };
-
-        cpu = {
-          enable = false;
-          # settings = mkIf (!cfg.profile.serverMode) {
-          #   cpuType = cfg.profile.cpu.brand;
-          #   generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
-          #   inherit (cfg.profile.cpu) sub-type;
-          # };
-        };
-
-        extras = {
-          enable = false;
-          # settings = {
-          #   sensors.enable = true;
-          #   thunderbolt.enable = true;
-          #   logitech.enable = true;
-          # };
+    (mkIf cfg.profile.cpu.enable {
+      modules.hardware.cpu = {
+        enable = true;
+        settings = {
+          cpuType = cfg.profile.cpu.brand;
+          generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
+          inherit (cfg.profile.cpu) sub-type;
         };
       };
     })
-    (mkIf (!cfg.serverMode) {
-      modules.hardware = {
-        core = {
-          enable = cfg.core.audio.enable || cfg.core.bluetooth.enable || cfg.core.storage.enable;
-          settings = {
-            audio.enable = cfg.core.audio.enable;
-            bluetooth.enable = cfg.core.bluetooth.enable;
-            storage.enable = cfg.core.storage.enable;
-          };
-        };
 
-        cpu = {
-          enable = true;
-          settings = {
-            cpuType = cfg.profile.cpu.brand;
-            generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
-            inherit (cfg.profile.cpu) sub-type;
-          };
+    (mkIf cfg.core.enable {
+      modules.hardware.core = {
+        enable = true;
+        settings = {
+          audio.enable = cfg.core.audio.enable;
+          bluetooth.enable = cfg.core.bluetooth.enable;
+          storage.enable = cfg.core.storage.enable;
         };
+      };
+    })
 
-        extras = {
-          enable = cfg.optionals.thunderbolt.enable || cfg.optionals.sensors.enable || cfg.optionals.peripherals.logitech.enable;
-          settings = {
-            sensors.enable = true;
-            thunderbolt.enable = true;
-            logitech.enable = true;
-          };
+    (mkIf cfg.optionals.enable {
+      modules.hardware.extras = {
+        enable = cfg.optionals.thunderbolt.enable || cfg.optionals.sensors.enable || cfg.optionals.peripherals.logitech.enable;
+        settings = {
+          sensors.enable = true;
+          thunderbolt.enable = true;
+          logitech.enable = true;
         };
       };
     })

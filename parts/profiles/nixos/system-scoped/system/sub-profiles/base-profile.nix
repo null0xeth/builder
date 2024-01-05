@@ -34,7 +34,6 @@ in {
           profile = mkOption {
             type = types.submodule {
               options = {
-                serverMode = mkEnableOption "";
                 firmware = mkOption {
                   type = types.submodule {
                     options = {
@@ -42,11 +41,11 @@ in {
                       automatic-updates = {
                         enable = mkEnableOption "enable automatic firmware updates";
                       };
-                      packages = mkOption {
-                        type = with types; listOf package;
-                        default = [];
-                        description = mdDoc "Firmware packages to be installed";
-                      };
+                      # packages = mkOption {
+                      #   type = with types; listOf package;
+                      #   default = [];
+                      #   description = mdDoc "Firmware packages to be installed";
+                      # };
                     };
                   };
                 };
@@ -121,7 +120,7 @@ in {
   config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.profile.firmware.enable {
       nixos-modules.system.firmware = {
-        inherit (cfg.profile.firmware) enable packages automatic-updates;
+        inherit (cfg.profile.firmware) enable automatic-updates;
       };
 
       environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
@@ -138,64 +137,6 @@ in {
     (mkIf cfg.sysutils.enable {
       nixos-modules.sysutils = {
         inherit (cfg.sysutils) enable tools;
-      };
-    })
-
-    (mkIf cfg.serverMode {
-      environment.systemPackages = with pkgs; [
-        curl
-        dnsutils
-        gitMinimal
-        htop
-        jq
-      ];
-
-      users.mutableUsers = false;
-      # Enable SSH everywhere
-      services.openssh.enable = true;
-      security.sudo.wheelNeedsPassword = false;
-      # If the user is in @wheel they are trusted by default.
-      nix.settings.trusted-users = ["root" "@wheel"];
-
-      documentation.enable = lib.mkDefault false;
-      documentation.info.enable = lib.mkDefault false;
-      documentation.man.enable = lib.mkDefault false;
-      documentation.nixos.enable = lib.mkDefault false;
-
-      # Print the URL instead on servers
-      environment.variables.BROWSER = "echo";
-
-      systemd = {
-        # Given that our systems are headless, emergency mode is useless.
-        # We prefer the system to attempt to continue booting so
-        # that we can hopefully still access it remotely.
-        enableEmergencyMode = false;
-
-        # For more detail, see:
-        #   https://0pointer.de/blog/projects/watchdog.html
-        watchdog = {
-          # systemd will send a signal to the hardware watchdog at half
-          # the interval defined here, so every 10s.
-          # If the hardware watchdog does not get a signal for 20s,
-          # it will forcefully reboot the system.
-          runtimeTime = "20s";
-          # Forcefully reboot if the final stage of the reboot
-          # hangs without progress for more than 30s.
-          # For more info, see:
-          #   https://utcc.utoronto.ca/~cks/space/blog/linux/SystemdShutdownWatchdog
-          rebootTime = "30s";
-        };
-
-        sleep.extraConfig = ''
-          AllowSuspend=no
-          AllowHibernation=no
-        '';
-      };
-
-      # use TCP BBR has significantly increased throughput and reduced latency for connections
-      boot.kernel.sysctl = {
-        "net.core.default_qdisc" = "fq";
-        "net.ipv4.tcp_congestion_control" = "bbr";
       };
     })
   ]);

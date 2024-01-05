@@ -13,7 +13,6 @@ in {
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the default graphical networking template";
-          serverMode = mkEnableOption "";
           hostName = mkOption {
             type = types.str;
             description = mdDoc "The hostname of the to-be configured system";
@@ -31,12 +30,11 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       # Allow PMTU / DHCP
-      environment.systemPackages = with pkgs; [libva-utils networkmanagerapplet] ++ optionals (!cfg.serverMode) [mullvad-vpn];
+      environment.systemPackages = with pkgs; [mullvad-vpn libva-utils networkmanagerapplet];
 
       networking = {
         hostName = "${cfg.hostName}";
         firewall = {
-          enable = mkIf cfg.serverMode true;
           allowPing = true;
           logRefusedConnections = lib.mkDefault false;
         };
@@ -55,7 +53,7 @@ in {
         };
       };
 
-      services.mullvad-vpn.enable = mkIf (!cfg.serverMode) true;
+      services.mullvad-vpn.enable = true;
     }
     (mkIf (cfg.extraHosts != null) {
       networking = {

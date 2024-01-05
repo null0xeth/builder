@@ -5,9 +5,9 @@
   ...
 }:
 with lib; let
-  cfg = config.roles.workstation.builder;
+  cfg = config.roles.workstation.poc;
 in {
-  options.roles.workstation.builder = {
+  options.roles.workstation.poc = {
     enable = mkEnableOption "";
     overrides = {
       kernelModules = mkOption {
@@ -27,14 +27,14 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      presets.remote-builder = {
+      presets.proofOfConcept = {
         enable = true;
-        serverMode = true;
-        name = "remote-builder";
+        name = "proofOfConcept";
 
         builder = {
           networking = {
-            hostName = "honkbuilder";
+            enable = true;
+            hostName = "the-backrooms";
             extraHosts = ''
               192.168.1.9 vip.chonk.city
             '';
@@ -42,40 +42,49 @@ in {
 
           fromHardwareConfig = {
             inherit (cfg.overrides) kernelModules initrd;
+            enable = true;
             hostArch = "x86_64-linux";
             fileSystems = {
               "/" = {
-                device = "/dev/disk/by-uuid/56407bcf-37f9-4e4b-b3e7-c4efb9e6d327";
+                device = "/dev/disk/by-uuid/01f1cf1e-4344-4940-aa10-bdc16c187711";
                 fsType = "ext4";
               };
+
               "/boot" = {
-                device = "/dev/disk/by-uuid/2C71-55D3";
+                device = "/dev/disk/by-uuid/11C2-7FEB";
                 fsType = "vfat";
               };
             };
-            swapDevices = [];
+            swapDevices = [
+              {
+                device = "/dev/disk/by-uuid/81cc56c3-21a9-4dfb-8b99-649f41aabf94";
+              }
+            ];
           };
 
-          # hardware = {
-          #   basics = {
-          #     audio.enable = false;
-          #     bluetooth.enable = false;
-          #     storage.enable = true;
-          #   };
-          #   cpu = {
-          #     brand = "intel";
-          #     generation = 12;
-          #     sub-type = "mobile";
-          #     useForGraphics = true;
-          #   };
-          #   functionality = {
-          #     thunderbolt.enable = false;
-          #     sensors.enable = false;
-          #     logitech.enable = false;
-          #   };
-          # };
+          hardware = {
+            enable = true;
+            serverMode = false;
+            basics = {
+              audio.enable = true;
+              bluetooth.enable = true;
+              storage.enable = true;
+            };
+            cpu = {
+              brand = "intel";
+              generation = 12;
+              sub-type = "mobile";
+              #useForGraphics = true;
+            };
+            functionality = {
+              thunderbolt.enable = true;
+              sensors.enable = true;
+              logitech.enable = true;
+            };
+          };
 
           kernel = {
+            enable = true;
             settings = {
               useLatest = true;
               kernelParams = {
@@ -124,37 +133,47 @@ in {
           };
 
           graphical = {
-            enable = false;
+            enable = true;
+            base = "gtk";
+
             settings = {
-              base = "gtk";
-              dbus.enable = true;
-            };
-            xserver = {
-              base = {
-                enable = false;
-                exportConfiguration.enable = false;
-                hyperlandSupport.enable = false;
-                libinput.enable = false;
+              system = {
+                dbus.enable = true;
               };
-              desktopManager = {
-                enable = false;
-                active = "gnome";
-              };
-              displayManager = {
-                enable = false;
-                active = "gdm";
+              xserver = {
+                enable = true;
+                extra = {
+                  exportConfiguration.enable = true;
+                  hyperlandSupport.enable = true;
+                };
+                libinput = {
+                  enable = true;
+                };
+
+                desktopManager = {
+                  enable = true;
+                  active = "gnome";
+                };
+                displayManager = {
+                  enable = true;
+                  active = "gdm";
+                };
               };
             };
           };
 
           system = {
-            serverMode = true;
-            firmware = {
-              enable = false;
-              fwupd = false;
+            enable = true;
+            profile = {
+              firmware = {
+                enable = true;
+                automatic-updates = {
+                  enable = true;
+                };
+              };
             };
             fonts = {
-              enable = false;
+              enable = true;
               packages = with pkgs; [
                 # Icon fonts:
                 material-symbols
@@ -178,7 +197,7 @@ in {
                 emoji = ["Noto Color Emoji"];
               };
             };
-            utilities = {
+            sysutils = {
               enable = true;
               tools = {
                 common.enable = true;
@@ -190,12 +209,13 @@ in {
           };
 
           security = {
+            enable = true;
             modules = {
               agenix = {
-                enable = false;
+                enable = true;
               };
               yubikey = {
-                enable = false;
+                enable = true;
                 settings = {
                   configuration = {
                     idVendor = "1050";
