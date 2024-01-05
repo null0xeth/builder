@@ -8,7 +8,7 @@
 in {
   flake = {
     nixosConfigurations = {
-      the-backrooms = withSystem "x86_64-linux" ({inputs', ...}:
+      honkbuilder = withSystem "x86_64-linux" ({inputs', ...}:
         inputs.nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs inputs';
