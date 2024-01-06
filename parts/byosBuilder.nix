@@ -624,6 +624,25 @@ with lib; let
         };
       };
       })
+      (mkIf cfg.builder.hardware.serverMode {
+        profiles.hardware.preset.${cfg.name} = {
+        enable = true;
+        name = "${cfg.name}";
+        profile = {
+          inherit (cfg.builder.hardware) cpu;
+        };
+        core = {
+          inherit (cfg.builder.hardware.basics) audio bluetooth storage;
+        };
+        optionals = {
+          inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
+          peripherals.logitech = {
+            inherit (cfg.builder.hardware.functionality.logitech) enable;
+          };
+        };
+      };
+      })
+
     ]))
 
     # Kernel:
