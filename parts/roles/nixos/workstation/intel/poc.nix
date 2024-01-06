@@ -58,28 +58,28 @@ in {
             swapDevices = [];
           };
 
-          # hardware = {
-          #   enable = true;
-          #   basics = {
-          #     enable = false;
-          #     # audio.enable = false;
-          #     # bluetooth.enable = false;
-          #     # storage.enable = false;
-          #   };
-          #   cpu = {
-          #     enable = false;
-          #     #brand = "virtio";
-          #     #generation = 12;
-          #     #sub-type = "virtual";
-          #     #useForGraphics = true;
-          #   };
-          #   functionality = {
-          #     enable = false;
-          #     # thunderbolt.enable = false;
-          #     # sensors.enable = false;
-          #     # logitech.enable = false;
-          #   };
-          # };
+          hardware = {
+            enable = true;
+            basics = {
+              enable = false;
+              audio.enable = false;
+              bluetooth.enable = false;
+              storage.enable = false;
+            };
+            cpu = {
+              enable = false;
+              brand = "virtio";
+              generation = 12;
+              sub-type = "virtual";
+              useForGraphics = true;
+            };
+            functionality = {
+              enable = false;
+              thunderbolt.enable = false;
+              sensors.enable = false;
+              logitech.enable = false;
+            };
+          };
 
           kernel = {
             enable = true;
