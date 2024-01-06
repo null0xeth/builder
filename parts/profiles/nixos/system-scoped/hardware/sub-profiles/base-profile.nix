@@ -134,6 +134,11 @@ in {
       modules.hardware.cpu.${cfg.name} = {
         enable = false;
         name = "${cfg.name}";
+        settings = {
+          cpuType = null;
+          generation = null;
+          sub-type = null;
+        };
       };
     })
 
