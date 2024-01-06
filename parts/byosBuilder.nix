@@ -571,9 +571,11 @@ with lib; let
     (mkIf cfg.builder.networking.enable {
       profiles.networking.preset.${cfg.name} = {
         enable = true;
-        hostName = mkIf (cfg.builder.networking.hostName != null) cfg.builder.networking.hostName;
-        extraHosts = mkIf (cfg.builder.networking.extraHosts != null) cfg.builder.networking.extraHosts;
-      };
+      } // (optionalAttrs (cfg.builder.networking.hostName != null) {
+        inherit (cfg.builder.networking) hostName;
+      }) // (optionalAttrs (cfg.builder.networking.extraHosts != null) {
+        inherit (cfg.builder.networking) extraHosts;
+      });
     })
 
     # FS:
