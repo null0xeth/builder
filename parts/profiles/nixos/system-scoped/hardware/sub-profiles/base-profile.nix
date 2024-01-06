@@ -7,7 +7,7 @@ with lib; let
   #inherit (lib) mkEnableOption mkOption mdDoc types mkIf mkMerge;
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
-  cfg1 = config.profiles.hardware.presets;
+  cfg1 = config.profiles.hardware.preset;
   allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
 
