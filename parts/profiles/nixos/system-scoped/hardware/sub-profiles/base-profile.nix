@@ -12,7 +12,7 @@ with lib; let
   #cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames allPresets)}";
   enabled = lib.filterAttrs (_: config: config.enable) cfg1;
   names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
-  cfg = config.presets."${builtins.head names}";
+  cfg = config.profiles.hardware.preset."${builtins.head names}";
 
   enableModule = lib.types.submodule {
     options = {
