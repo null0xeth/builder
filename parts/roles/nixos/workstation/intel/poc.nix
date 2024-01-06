@@ -133,7 +133,7 @@ in {
           };
 
           graphical = {
-            enable = false;
+            enable = true;
             base = "gtk";
 
             settings = {
@@ -144,7 +144,7 @@ in {
                 enable = true;
                 extra = {
                   exportConfiguration.enable = true;
-                  hyperlandSupport.enable = true;
+                  hyperlandSupport.enable = false;
                 };
                 libinput = {
                   enable = true;
@@ -212,10 +212,10 @@ in {
             enable = true;
             modules = {
               agenix = {
-                enable = true;
+                enable = false;
               };
               yubikey = {
-                enable = true;
+                enable = false;
                 settings = {
                   configuration = {
                     idVendor = "1050";
