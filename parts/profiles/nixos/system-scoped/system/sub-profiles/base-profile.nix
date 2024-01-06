@@ -62,6 +62,7 @@ in {
                   description = mdDoc "Font packages to install";
                 };
                 defaults = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       serif = mkOption {
