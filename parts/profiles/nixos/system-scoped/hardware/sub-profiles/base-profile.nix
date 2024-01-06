@@ -42,17 +42,19 @@ in {
                   type = types.submodule {
                     options = {
                       brand = mkOption {
-                        type = types.str;
+                        type = types.nullOr types.str;
                         description = mdDoc "The manufacturer of your CPU";
-                        #default = "intel";
+                        default = null;
                       };
                       generation = mkOption {
                         type = types.int;
                         description = mdDoc "The generation of your CPU (intel only)";
+                        default = null;
                       };
                       sub-type = mkOption {
                         type = types.str;
                         description = mdDoc "The type of CPU installed [desktop|mobile]";
+                        default = null;
                       };
                     };
                   };
