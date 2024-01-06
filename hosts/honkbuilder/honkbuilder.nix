@@ -4,7 +4,7 @@
   ];
 
   roles = {
-    workstation.builder = {
+    workstation.poc = {
       enable = true;
       overrides = {
         kernelModules = [];
