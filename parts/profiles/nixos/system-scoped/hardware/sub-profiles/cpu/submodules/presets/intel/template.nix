@@ -22,19 +22,19 @@ in {
           type = types.submodule {
             options = {
               brand = mkOption {
-                type = types.enum ["intel"];
+                type = types.nullOr (types.enum ["intel"]);
                 description = mdDoc "The manufacturer of your CPU";
-                default = "intel";
+                #default = "intel";
               };
               generation = mkOption {
-                type = types.int;
+                type = types.nullOr types.int;
                 description = mdDoc "The generation of your CPU (intel only)";
-                default = 0;
+                #default = 0;
               };
               sub-type = mkOption {
-                type = types.enum ["mobile" "desktop"];
+                type = types.nullOr (types.enum ["mobile" "desktop"]);
                 description = mdDoc "The type of CPU installed [desktop|mobile]";
-                default = "mobile";
+                #default = "mobile";
               };
             };
           };

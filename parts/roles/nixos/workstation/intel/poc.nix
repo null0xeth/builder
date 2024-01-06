@@ -68,9 +68,9 @@ in {
             };
             cpu = {
               enable = false;
-              brand = "virtio";
+              #brand = "virtio";
               #generation = 12;
-              sub-type = "virtual";
+              #sub-type = "virtual";
               #useForGraphics = true;
             };
             functionality = {
