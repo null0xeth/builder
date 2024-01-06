@@ -8,8 +8,11 @@ with lib; let
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
   cfg1 = config.profiles.hardware.preset;
-  allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
-  cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames allPresets)}";
+  #allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
+  #cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames allPresets)}";
+  enabled = lib.filterAttrs (_: config: config.enable) cfg1;
+  names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
+  cfg = config.presets."${builtins.head names}";
 
   enableModule = lib.types.submodule {
     options = {
