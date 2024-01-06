@@ -39,10 +39,7 @@ in {
           profile = mkOption {
             type = types.submodule {
               options = {
-                enable = mkOption {
-                  type = types.bool;
-                  default = false;
-                };
+                enable = mkEnableOption "lol";
                 cpu = mkOption {
                   type = types.submodule {
                     options = {
