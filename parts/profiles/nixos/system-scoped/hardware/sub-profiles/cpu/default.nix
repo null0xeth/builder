@@ -18,14 +18,13 @@ in {
       };
       generation = mkOption {
         # cpu generation
-        type = types.int;
-        default = 0;
+        type = types.nullOr types.int;
         description = "Specify the CPU generation you have (intel only)";
       };
       sub-type = mkOption {
-        type = types.enum ["mobile" "desktop"];
+        type = types.nullOr types.enum ["mobile" "desktop"];
         description = mdDoc "The type of CPU installed [desktop|mobile]";
-        default = "mobile";
+        #default = "mobile";
       };
     };
   };
