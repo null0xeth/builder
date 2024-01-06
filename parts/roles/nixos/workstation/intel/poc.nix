@@ -61,22 +61,23 @@ in {
           hardware = {
             enable = true;
             serverMode = true;
-            # basics = {
-            #   audio.enable = true;
-            #   bluetooth.enable = true;
-            #   storage.enable = true;
-            # };
-            # cpu = {
-            #   brand = "intel";
-            #   generation = 12;
-            #   sub-type = "mobile";
-            #   #useForGraphics = true;
-            # };
-            # functionality = {
-            #   thunderbolt.enable = true;
-            #   sensors.enable = true;
-            #   logitech.enable = true;
-            # };
+            basics = {
+              audio.enable = false;
+              bluetooth.enable = false;
+              storage.enable = false;
+            };
+            cpu = {
+              enable = false;
+              brand = "virtio";
+              #generation = 12;
+              sub-type = "virtual";
+              #useForGraphics = true;
+            };
+            functionality = {
+              thunderbolt.enable = false;
+              sensors.enable = false;
+              logitech.enable = false;
+            };
           };
 
           kernel = {
