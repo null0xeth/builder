@@ -12,7 +12,7 @@ in {
     enable = mkEnableOption "enable the default CPU profile";
     settings = {
       cpuType = mkOption {
-        type = types.enum ["intel" "amd"];
+        type = types.nullOr (types.enum ["intel" "amd"]);
         default = "intel";
         description = "Please select the type of CPU you have (intel/amd)";
       };
@@ -22,7 +22,7 @@ in {
         description = "Specify the CPU generation you have (intel only)";
       };
       sub-type = mkOption {
-        type = types.nullOr types.enum ["mobile" "desktop"];
+        type = types.nullOr (types.enum ["mobile" "desktop"]);
         description = mdDoc "The type of CPU installed [desktop|mobile]";
         #default = "mobile";
       };
