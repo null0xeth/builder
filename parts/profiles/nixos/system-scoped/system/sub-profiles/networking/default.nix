@@ -9,9 +9,9 @@ with lib; let
   # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
   base = config.profiles.networking.preset;
   allPresets = builtins.mapAttrs (_: config: config.name) base;
-  activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
-  activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
-  cfg = base."${activePresetNames}";
+  #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
+  #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
+  cfg = base."${allPresets}";
 in {
   options.profiles.networking = {
     preset = mkOption {
