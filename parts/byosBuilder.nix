@@ -3,16 +3,10 @@ flake.nixosModules.byosBuilder = moduleWithSystem (
   perSystem@{ self' }:
   { config, lib, ...}:
 with lib; let
-  #filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  #cfg = config.presets.${filterfunc config.presets};
-
   cfg1 = config.presets;
   allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
-  #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
-  #activePresetNames = builtins.attrValues (builtins.mapAttrs(_: config: config.name) activePresets);
   cfg = config.presets."${builtins.head (builtins.attrNames allPresets)}";
-  #presetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
-
+  
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
@@ -62,30 +56,34 @@ with lib; let
                       default = "x86_64-linux";
                     };
                     kernelModules = mkOption {
-                      type = types.nullOr (types.listOf types.str);
+                      type = types.listOf types.str;
                       description = mdDoc "add kernelModules from ur Hardware-config.nix";
+                      default = [];
                     };
                     initrd = mkOption {
                       type = types.submodule {
                         options = {
                           availableKernelModules = mkOption {
-                            type = types.nullOr (types.listOf types.str);
+                            type = types.listOf types.str;
                             description = mdDoc "add initrd kernelModules from ur Hardware-config.nix";
+                            default = [];
                           };
                         };
                       };
                     };
                     fileSystems = mkOption {
                       type = types.lazyAttrsOf types.anything;
+                      default = {};
                     };
                     swapDevices = mkOption {
-                      type = with types; nullOr (listOf (submodule {
+                      default = [];
+                      type = with types; listOf (submodule {
                         options = {
                           device = mkOption {
                             type = path;
                           };
                         };
-                      }));
+                      });
                     };
                   };
                 };
@@ -124,7 +122,7 @@ with lib; let
                             default = !cfg.builder.hardware.serverMode;
                           };
                           brand = mkOption {
-                            type = types.enum ["intel" "amd"];
+                            type = types.enum ["intel" "amd" "virtio"];
                             default = "intel";
                             description = "Please select the type of CPU you have (intel/amd)";
                           };
@@ -136,8 +134,8 @@ with lib; let
                             description = "Specify the CPU generation you have (intel only)";
                           };
                           sub-type = mkOption {
-                            type = types.enum ["mobile" "desktop"];
-                            description = mdDoc "The type of CPU installed [desktop|mobile]";
+                            type = types.enum ["mobile" "desktop" "virtual"];
+                            description = mdDoc "The type of CPU installed [desktop|mobile|virtual]";
                             default = "mobile";
                           };
                           #useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
@@ -197,7 +195,7 @@ with lib; let
                                 customParams = mkOption {
                                   type = types.nullOr (types.listOf types.str);
                                   description = "Kernel parameters";
-                                  default = null;
+                                  
                                 };
                               };
                             };
@@ -270,7 +268,7 @@ with lib; let
                                           options = {
                                             enable = mkEnableOption "use systemd boot";
                                             configurationLimit = mkOption {
-                                              type = types.nullOr types.int;
+                                              type = types.int;
                                               default = 5;
                                               description = mdDoc "the maximum number of nixos generations kept on this system";
                                             };
@@ -297,9 +295,9 @@ with lib; let
                                               type = enableModule; # enable systemd in the first stage of booting.
                                             };
                                             kernelModules = mkOption {
-                                              type = types.nullOr (types.listOf types.str);
+                                              type = types.listOf types.str;
                                               description = "Kernel modules to always be installed";
-                                              default = null;
+                                              default = [];
                                             };
                                             availableKernelModules = mkOption {
                                               type = types.listOf types.str;
@@ -445,23 +443,28 @@ with lib; let
                         options = {
                           enable = mkEnableOption "the font configuration module";
                           packages = mkOption {
-                            type = with types; nullOr (listOf package);
+                            type = with types; listOf package;
                             description = mdDoc "Font packages to install";
+                            default = [];
                           };
                           defaults = mkOption {
                             type = types.submodule {
                               options = {
                                 serif = mkOption {
-                                  type = with types; nullOr (listOf str);
+                                  type = with types; listOf str;
+                                  default = [];
                                 };
                                 sansSerif = mkOption {
-                                  type = with types; nullOr (listOf str);
+                                  type = with types; listOf str;
+                                  default = [];
                                 };
                                 monospace = mkOption {
-                                  type = with types; nullOr (listOf str);
+                                  type = with types; listOf str;
+                                  default = [];
                                 };
                                 emoji = mkOption {
-                                  type = with types; nullOr (listOf str);
+                                  type = with types; listOf str;
+                                  default = [];
                                 };
                               };
                             };
@@ -726,7 +729,7 @@ with lib; let
           };
         }
       ]))
-      ]);
-    }
+    ]);
+  }
 );
 }
