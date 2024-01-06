@@ -59,7 +59,7 @@ in {
           };
 
           hardware = {
-            enable = true;
+            enable = false;
             serverMode = true;
             basics = {
               audio.enable = false;
