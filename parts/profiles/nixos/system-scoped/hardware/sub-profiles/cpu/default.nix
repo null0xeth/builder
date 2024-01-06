@@ -15,13 +15,16 @@ in {
     type = types.attrsOf (types.submodule {
       options = {
         enable = mkEnableOption "enable the default CPU profile";
+        name = mkOption {
+          type = types.string;
+          default = "cpu";
+        };
         settings = mkOption {
-          default = {};
           type = types.submodule {
             options = {
               cpuType = mkOption {
                 type = types.nullOr (types.enum ["intel" "amd"]);
-                default = "intel";
+                #default = "intel";
                 description = "Please select the type of CPU you have (intel/amd)";
               };
               generation = mkOption {

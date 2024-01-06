@@ -66,13 +66,13 @@ in {
               bluetooth.enable = false;
               storage.enable = false;
             };
-            # cpu = {
-            #   enable = false;
-            #   #brand = "virtio";
-            #   #generation = 12;
-            #   #sub-type = "virtual";
-            #   #useForGraphics = true;
-            # };
+            cpu = {
+              enable = false;
+              #brand = "virtio";
+              #generation = 12;
+              #sub-type = "virtual";
+              #useForGraphics = true;
+            };
             functionality = {
               thunderbolt.enable = false;
               sensors.enable = false;
