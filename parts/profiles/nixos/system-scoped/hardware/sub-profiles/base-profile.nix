@@ -130,6 +130,13 @@ in {
       };
     })
 
+    (mkIf (!cfg.profile.cpu.enable) {
+      modules.hardware.cpu.${cfg.name} = {
+        enable = false;
+        name = "${cfg.name}";
+      };
+    })
+
     (mkIf cfg.core.enable {
       modules.hardware.core = {
         enable = true;
