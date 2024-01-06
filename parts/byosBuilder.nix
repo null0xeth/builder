@@ -448,6 +448,7 @@ with lib; let
                             default = [];
                           };
                           defaults = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 serif = mkOption {
