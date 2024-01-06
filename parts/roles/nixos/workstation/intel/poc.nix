@@ -34,7 +34,7 @@ in {
         builder = {
           networking = {
             enable = true;
-            hostName = "the-backrooms";
+            hostName = "honkbuilder";
             extraHosts = ''
               192.168.1.9 vip.chonk.city
             '';
@@ -46,41 +46,37 @@ in {
             hostArch = "x86_64-linux";
             fileSystems = {
               "/" = {
-                device = "/dev/disk/by-uuid/01f1cf1e-4344-4940-aa10-bdc16c187711";
+                device = "/dev/disk/by-uuid/56407bcf-37f9-4e4b-b3e7-c4efb9e6d327";
                 fsType = "ext4";
               };
 
               "/boot" = {
-                device = "/dev/disk/by-uuid/11C2-7FEB";
+                device = "/dev/disk/by-uuid/2C71-55D3";
                 fsType = "vfat";
               };
             };
-            swapDevices = [
-              {
-                device = "/dev/disk/by-uuid/81cc56c3-21a9-4dfb-8b99-649f41aabf94";
-              }
-            ];
+            swapDevices = [];
           };
 
           hardware = {
             enable = true;
-            serverMode = false;
-            basics = {
-              audio.enable = true;
-              bluetooth.enable = true;
-              storage.enable = true;
-            };
-            cpu = {
-              brand = "intel";
-              generation = 12;
-              sub-type = "mobile";
-              #useForGraphics = true;
-            };
-            functionality = {
-              thunderbolt.enable = true;
-              sensors.enable = true;
-              logitech.enable = true;
-            };
+            serverMode = true;
+            # basics = {
+            #   audio.enable = true;
+            #   bluetooth.enable = true;
+            #   storage.enable = true;
+            # };
+            # cpu = {
+            #   brand = "intel";
+            #   generation = 12;
+            #   sub-type = "mobile";
+            #   #useForGraphics = true;
+            # };
+            # functionality = {
+            #   thunderbolt.enable = true;
+            #   sensors.enable = true;
+            #   logitech.enable = true;
+            # };
           };
 
           kernel = {
@@ -133,7 +129,7 @@ in {
           };
 
           graphical = {
-            enable = true;
+            enable = false;
             base = "gtk";
 
             settings = {
@@ -166,36 +162,36 @@ in {
             enable = true;
             profile = {
               firmware = {
-                enable = true;
+                enable = false;
                 automatic-updates = {
-                  enable = true;
+                  enable = false;
                 };
               };
             };
             fonts = {
-              enable = true;
-              packages = with pkgs; [
-                # Icon fonts:
-                material-symbols
+              enable = false;
+              # packages = with pkgs; [
+              #   # Icon fonts:
+              #   material-symbols
 
-                # Normal fonts:
-                font-awesome
-                jost
-                lexend
-                noto-fonts
-                noto-fonts-cjk
-                noto-fonts-emoji
-                roboto
+              #   # Normal fonts:
+              #   font-awesome
+              #   jost
+              #   lexend
+              #   noto-fonts
+              #   noto-fonts-cjk
+              #   noto-fonts-emoji
+              #   roboto
 
-                # NerdFonts:
-                (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
-              ];
-              defaults = {
-                serif = ["Noto Serif" "Noto Color Emoji"];
-                sansSerif = ["Noto Sans" "Noto Color Emoji"];
-                monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
-                emoji = ["Noto Color Emoji"];
-              };
+              #   # NerdFonts:
+              #   (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
+              # ];
+              # defaults = {
+              #   serif = ["Noto Serif" "Noto Color Emoji"];
+              #   sansSerif = ["Noto Sans" "Noto Color Emoji"];
+              #   monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
+              #   emoji = ["Noto Color Emoji"];
+              # };
             };
             sysutils = {
               enable = true;
@@ -222,10 +218,10 @@ in {
                     idProduct = "0407";
                   };
                   udev = {
-                    enable = true;
+                    enable = false;
                   };
                   touchDetector = {
-                    enable = true;
+                    enable = false;
                   };
                 };
               };
