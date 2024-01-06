@@ -592,7 +592,7 @@ with lib; let
           profile = {
             enable = cfg.builder.hardware.cpu.enable;
             cpu = {  
-              inherit (cfg.builder.hardware) cpu;
+              inherit (cfg.builder.hardware.cpu) brand generation sub-type;
             };
           };
           core = {
