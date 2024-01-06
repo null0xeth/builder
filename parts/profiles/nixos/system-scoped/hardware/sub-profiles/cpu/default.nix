@@ -23,17 +23,20 @@ in {
           type = types.submodule {
             options = {
               cpuType = mkOption {
-                type = types.nullOr (types.enum ["intel" "amd"]);
+                #type = types.nullOr (types.enum ["intel" "amd"]);
                 #default = "intel";
+                type = types.str;
                 description = "Please select the type of CPU you have (intel/amd)";
               };
               generation = mkOption {
                 # cpu generation
-                type = types.nullOr types.int;
+                #type = types.nullOr types.int;
+                type = types.int;
                 description = "Specify the CPU generation you have (intel only)";
               };
               sub-type = mkOption {
-                type = types.nullOr (types.enum ["mobile" "desktop"]);
+                #type = types.nullOr (types.enum ["mobile" "desktop"]);
+                type = types.str;
                 description = mdDoc "The type of CPU installed [desktop|mobile]";
                 #default = "mobile";
               };
