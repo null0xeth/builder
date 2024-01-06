@@ -34,14 +34,14 @@ in {
             default = "default-hardware-template";
           };
           profile = mkOption {
-            type = types.submodule {
+            type = types.nullOr (types.submodule {
               options = {
                 enable = mkOption {
                   type = types.bool;
                   default = false;
                 };
                 cpu = mkOption {
-                  type = types.submodule {
+                  type = types.nullOr (types.submodule {
                     options = {
                       brand = mkOption {
                         type = types.nullOr types.str;
@@ -59,7 +59,7 @@ in {
                         #default = null;
                       };
                     };
-                  };
+                  });
                 };
                 gpu = mkOption {
                   type = types.submodule {
@@ -73,7 +73,7 @@ in {
                   };
                 };
               };
-            };
+            });
           };
 
           core = mkOption {
