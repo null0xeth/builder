@@ -133,7 +133,7 @@ in {
           };
 
           graphical = {
-            enable = true;
+            enable = false;
             base = "gtk";
 
             settings = {
