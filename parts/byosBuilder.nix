@@ -591,7 +591,7 @@ with lib; let
           name = "${cfg.name}";
           profile = {
             enable = cfg.builder.hardware.cpu.enable;
-            cpu = mkIf cfg.builder.hardware.cpu.enable {  
+            cpu = {  
               inherit (cfg.builder.hardware) cpu;
             };
           };
