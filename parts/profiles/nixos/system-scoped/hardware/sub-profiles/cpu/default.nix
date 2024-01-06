@@ -2,36 +2,43 @@
   config,
   lib,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types mkIf mdDoc;
-  cfg = config.modules.hardware.cpu;
+}:
+with lib; let
+  #inherit (lib) mkEnableOption mkOption types mkIf mdDoc;
+  cfg1 = config.modules.hardware.cpu;
+  allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
+  cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
   #slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
 in {
   imports = [./submodules];
-  options.modules.hardware.cpu = {
-    enable = mkEnableOption "enable the default CPU profile";
-    settings = mkOption {
-      default = {};
-      type = types.submodule {
-        options = {
-          cpuType = mkOption {
-            type = types.nullOr (types.enum ["intel" "amd"]);
-            default = "intel";
-            description = "Please select the type of CPU you have (intel/amd)";
-          };
-          generation = mkOption {
-            # cpu generation
-            type = types.nullOr types.int;
-            description = "Specify the CPU generation you have (intel only)";
-          };
-          sub-type = mkOption {
-            type = types.nullOr (types.enum ["mobile" "desktop"]);
-            description = mdDoc "The type of CPU installed [desktop|mobile]";
-            #default = "mobile";
+  options.modules.hardware.cpu = mkOption {
+    type = types.attrsOf (types.submodule {
+      options = {
+        enable = mkEnableOption "enable the default CPU profile";
+        settings = mkOption {
+          default = {};
+          type = types.submodule {
+            options = {
+              cpuType = mkOption {
+                type = types.nullOr (types.enum ["intel" "amd"]);
+                default = "intel";
+                description = "Please select the type of CPU you have (intel/amd)";
+              };
+              generation = mkOption {
+                # cpu generation
+                type = types.nullOr types.int;
+                description = "Specify the CPU generation you have (intel only)";
+              };
+              sub-type = mkOption {
+                type = types.nullOr (types.enum ["mobile" "desktop"]);
+                description = mdDoc "The type of CPU installed [desktop|mobile]";
+                #default = "mobile";
+              };
+            };
           };
         };
       };
-    };
+    });
   };
   config = mkIf cfg.enable {
     assertions = [

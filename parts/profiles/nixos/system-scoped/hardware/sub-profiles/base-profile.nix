@@ -119,7 +119,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.profile.cpu.enable {
-      modules.hardware.cpu = {
+      modules.hardware.cpu.${cfg.name} = {
         enable = true;
         settings = {
           cpuType = cfg.profile.cpu.brand;
