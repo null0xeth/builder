@@ -9,7 +9,7 @@ with lib; let
   # cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
   cfg1 = config.profiles.hardware.preset;
   allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
-  cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
+  cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames allPresets)}";
 
   enableModule = lib.types.submodule {
     options = {
