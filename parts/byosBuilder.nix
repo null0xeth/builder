@@ -6,7 +6,7 @@ with lib; let
   cfg1 = config.presets;
   allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   cfg = config.presets."${builtins.head (builtins.attrNames allPresets)}";
-  
+
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
@@ -96,7 +96,10 @@ with lib; let
                     basics = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkEnableOption "tba";
+                          enable = mkOption {
+                            type = types.bool;
+                            default = false;
+                          };
                           audio = mkOption {
                             type = enableModule;
                           };
@@ -119,20 +122,20 @@ with lib; let
                           };
                           brand = mkOption {
                             type = types.nullOr (types.enum ["intel" "amd" "virtio"]);
-                            #default = "intel";
+                            default = "intel";
                             description = "Please select the type of CPU you have (intel/amd)";
                           };
 
                           generation = mkOption {
                             # cpu generation
                             type = types.nullOr types.int;
-                            #default = 0;
+                            default = 12;
                             description = "Specify the CPU generation you have (intel only)";
                           };
                           sub-type = mkOption {
                             type = types.nullOr (types.enum ["mobile" "desktop" "virtual"]);
                             description = mdDoc "The type of CPU installed [desktop|mobile|virtual]";
-                            #default = "mobile";
+                            default = "mobile";
                           };
                           #useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
                         };
@@ -144,7 +147,7 @@ with lib; let
                         options = {
                           enable = mkOption {
                             type = types.bool;
-                            default = !cfg.builder.hardware.serverMode;
+                            default = false;
                           };
                           thunderbolt = mkOption {
                             type = enableModule;
@@ -191,7 +194,7 @@ with lib; let
                                 customParams = mkOption {
                                   type = types.nullOr (types.listOf types.str);
                                   description = "Kernel parameters";
-                                  
+
                                 };
                               };
                             };
@@ -585,27 +588,36 @@ with lib; let
     })
 
     # HW:
-    (mkIf cfg.builder.hardware.enable {
+    (mkIf cfg.builder.hardware.enable (mkMerge [
+      {
         profiles.hardware.preset.${cfg.name} = {
           enable = true;
           name = "${cfg.name}";
+        }
+        // (optionalAttrs cfg.builder.hardware.cpu.enable {
           profile = {
-            enable = cfg.builder.hardware.cpu.enable;
-            cpu = {  
+            enable = true;
+            cpu = {
               inherit (cfg.builder.hardware.cpu) brand generation sub-type;
             };
           };
+        })
+          // (optionalAttrs cfg.builder.hardware.basics.enable {
           core = {
-            inherit (cfg.builder.hardware.basics) enable audio bluetooth storage;
+            enable = true;
+            inherit (cfg.builder.hardware.basics) audio bluetooth storage;
           };
+        }) // (optionalAttrs cfg.builder.hardware.functionality.enable {
           optionals = {
-            inherit (cfg.builder.hardware.functionality) enable thunderbolt sensors;
+            enable = true;
+            inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
             peripherals.logitech = {
               inherit (cfg.builder.hardware.functionality.logitech) enable;
             };
           };
-        };
-      })
+        });
+      }
+    ]))
 
     # Kernel:
     (mkIf cfg.builder.kernel.enable {
@@ -681,7 +693,7 @@ with lib; let
           profiles.system.preset.${cfg.name} = {
             enable = true;
             name = "${cfg.name}";
-            inherit (cfg.builder.system) profile fonts sysutils; 
+            inherit (cfg.builder.system) profile fonts sysutils;
           };
         }
 

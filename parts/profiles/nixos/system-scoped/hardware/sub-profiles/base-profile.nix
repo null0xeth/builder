@@ -36,7 +36,10 @@ in {
           profile = mkOption {
             type = types.submodule {
               options = {
-                enable = mkEnableOption "tba";
+                enable = mkOption {
+                  type = types.bool;
+                  default = false;
+                };
                 cpu = mkOption {
                   type = types.submodule {
                     options = {
