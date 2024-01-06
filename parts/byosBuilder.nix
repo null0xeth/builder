@@ -701,24 +701,25 @@ with lib; let
           profiles.system.preset.${cfg.name} = {
             enable = true;
             name = "${cfg.name}";
+            inherit (cfg.builder.system) profile fonts sysutils; 
           };
         }
 
-        (mkIf cfg.builder.system.profile.firmware.enable {
-          profiles.system.preset.${cfg.name} = {
-              inherit (cfg.builder.system) profile;
-          };
-        })
-        (mkIf cfg.builder.system.fonts.enable {
-          profiles.system.preset.${cfg.name} = {
-            inherit (cfg.builder.system) fonts;
-          };
-        })
-        (mkIf cfg.builder.system.sysutils.enable {
-          profiles.system.preset.${cfg.name} = {
-            inherit (cfg.builder.system) sysutils;
-          };
-        })
+        # (mkIf cfg.builder.system.profile.firmware.enable {
+        #   profiles.system.preset.${cfg.name} = {
+        #       inherit (cfg.builder.system) profile;
+        #   };
+        # })
+        # (mkIf cfg.builder.system.fonts.enable {
+        #   profiles.system.preset.${cfg.name} = {
+        #     inherit (cfg.builder.system) fonts;
+        #   };
+        # })
+        # (mkIf cfg.builder.system.sysutils.enable {
+        #   profiles.system.preset.${cfg.name} = {
+        #     inherit (cfg.builder.system) sysutils;
+        #   };
+        # })
       ]))
 
       # Security:
