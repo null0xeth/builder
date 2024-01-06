@@ -38,22 +38,21 @@ in {
               options = {
                 enable = mkEnableOption "tba";
                 cpu = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       brand = mkOption {
-                        type = types.enum ["intel" "amd"];
+                        type = types.str;
                         description = mdDoc "The manufacturer of your CPU";
-                        default = "intel";
+                        #default = "intel";
                       };
                       generation = mkOption {
-                        type = types.nullOr types.int;
+                        type = types.int;
                         description = mdDoc "The generation of your CPU (intel only)";
-                        default = null;
                       };
                       sub-type = mkOption {
-                        type = types.enum ["mobile" "desktop"];
+                        type = types.str;
                         description = mdDoc "The type of CPU installed [desktop|mobile]";
-                        default = "mobile";
                       };
                     };
                   };
