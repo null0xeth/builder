@@ -61,9 +61,10 @@ in {
           hardware = {
             enable = true;
             basics = {
-              audio.enable = false;
-              bluetooth.enable = false;
-              storage.enable = false;
+              enable = false;
+              # audio.enable = false;
+              # bluetooth.enable = false;
+              # storage.enable = false;
             };
             cpu = {
               enable = false;
@@ -73,9 +74,10 @@ in {
               #useForGraphics = true;
             };
             functionality = {
-              thunderbolt.enable = false;
-              sensors.enable = false;
-              logitech.enable = false;
+              enable = false;
+              # thunderbolt.enable = false;
+              # sensors.enable = false;
+              # logitech.enable = false;
             };
           };
 

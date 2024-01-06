@@ -96,10 +96,7 @@ with lib; let
                     basics = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = !cfg.builder.hardware.serverMode;
-                          };
+                          enable = mkEnableOption "tba";
                           audio = mkOption {
                             type = enableModule;
                           };
@@ -590,21 +587,24 @@ with lib; let
     # HW:
     (mkIf cfg.builder.hardware.enable {
         profiles.hardware.preset.${cfg.name} = {
-        enable = true;
-        name = "${cfg.name}";
-        profile = {
-          inherit (cfg.builder.hardware) cpu;
-        };
-        core = {
-          inherit (cfg.builder.hardware.basics) audio bluetooth storage;
-        };
-        optionals = {
-          inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
-          peripherals.logitech = {
-            inherit (cfg.builder.hardware.functionality.logitech) enable;
+          enable = true;
+          name = "${cfg.name}";
+          profile = {
+            enable = cfg.builder.hardware.cpu.enable;
+            cpu = mkIf cfg.builder.hardware.cpu.enable {  
+              inherit (cfg.builder.hardware) cpu;
+            };
+          };
+          core = {
+            inherit (cfg.builder.hardware.basics) enable audio bluetooth storage;
+          };
+          optionals = {
+            inherit (cfg.builder.hardware.functionality) enable thunderbolt sensors;
+            peripherals.logitech = {
+              inherit (cfg.builder.hardware.functionality.logitech) enable;
+            };
           };
         };
-      };
       })
 
     # Kernel:
