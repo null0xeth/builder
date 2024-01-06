@@ -5,7 +5,7 @@
 }: let
   inherit (lib) mkEnableOption mkOption types mkIf mdDoc;
   cfg = config.modules.hardware.cpu;
-  slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+  #slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
 in {
   imports = [./submodules];
   options.modules.hardware.cpu = {
@@ -36,8 +36,14 @@ in {
         message = "Please specify the processor generation. It cannot be omitted";
       }
     ];
-    hardware-cpu-presets.${slug} = {
-      enable = true;
+    #hardware-cpu-presets.${slug} = {
+    hardware-cpu-presets = let
+      slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+    in {
+      ${slug} = {
+        enable = true;
+      };
     };
   };
+  #};
 }
