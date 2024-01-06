@@ -11,7 +11,7 @@ with lib; let
   allPresets = builtins.mapAttrs (_: config: config.name) base;
   activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
   activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
-  cfg = base; #.preset.${activePresetNames};
+  cfg = base.preset.${activePresetNames};
 in {
   options.profiles.networking = {
     preset = mkOption {
