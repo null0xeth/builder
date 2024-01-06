@@ -36,10 +36,10 @@ in {
           profile = mkOption {
             type = types.submodule {
               options = {
+                enable = mkEnableOption "tba";
                 cpu = mkOption {
                   type = types.submodule {
                     options = {
-                      enable = mkEnableOption "tba";
                       brand = mkOption {
                         type = types.enum ["intel" "amd"];
                         description = mdDoc "The manufacturer of your CPU";
@@ -118,7 +118,7 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.profile.cpu.enable {
+    (mkIf cfg.profile.enable {
       modules.hardware.cpu.${cfg.name} = {
         enable = true;
         name = "${cfg.name}";

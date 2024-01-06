@@ -595,9 +595,7 @@ with lib; let
           enable = true;
           name = "${cfg.name}";
           profile = {
-            cpu = {
               enable = false;
-            };
           };
           core = {
             enable = false;
