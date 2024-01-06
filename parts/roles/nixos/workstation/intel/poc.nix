@@ -60,7 +60,6 @@ in {
 
           hardware = {
             enable = true;
-            serverMode = true;
             basics = {
               audio.enable = false;
               bluetooth.enable = false;

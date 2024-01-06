@@ -38,7 +38,6 @@ in {
               options = {
                 enable = mkEnableOption "tba";
                 cpu = mkOption {
-                  default = {};
                   type = types.submodule {
                     options = {
                       brand = mkOption {

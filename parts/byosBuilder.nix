@@ -93,7 +93,6 @@ with lib; let
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
-                    serverMode = mkEnableOption "tba";
                     basics = mkOption {
                       type = types.submodule {
                         options = {
@@ -589,24 +588,7 @@ with lib; let
     })
 
     # HW:
-    (mkIf cfg.builder.hardware.enable (mkMerge [
-      # (mkIf cfg.builder.hardware.serverMode {
-      #   profiles.hardware.preset.${cfg.name} = {
-      #     enable = true;
-      #     name = "${cfg.name}";
-      #     profile = {
-      #         enable = false;
-      #     };
-      #     core = {
-      #       enable = false;
-      #     };
-      #     optionals = {
-      #       enable = false;
-      #     };
-      #   };
-      # })
-
-      (mkIf (!cfg.builder.hardware.serverMode) {
+    (mkIf cfg.builder.hardware.enable {
         profiles.hardware.preset.${cfg.name} = {
         enable = true;
         name = "${cfg.name}";
@@ -624,26 +606,6 @@ with lib; let
         };
       };
       })
-      (mkIf cfg.builder.hardware.serverMode {
-        profiles.hardware.preset.${cfg.name} = {
-        enable = true;
-        name = "${cfg.name}";
-        profile = {
-          inherit (cfg.builder.hardware) cpu;
-        };
-        core = {
-          inherit (cfg.builder.hardware.basics) audio bluetooth storage;
-        };
-        optionals = {
-          inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
-          peripherals.logitech = {
-            inherit (cfg.builder.hardware.functionality.logitech) enable;
-          };
-        };
-      };
-      })
-
-    ]))
 
     # Kernel:
     (mkIf cfg.builder.kernel.enable {
