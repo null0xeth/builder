@@ -5,8 +5,13 @@
   ...
 }:
 with lib; let
-  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
+  # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
+  base = config.profiles.networking;
+  allPresets = builtins.mapAttrs (_: config: config.name) base;
+  activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
+  activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
+  cfg = base.activePresetNames;
 in {
   options.profiles.networking = {
     preset = mkOption {
