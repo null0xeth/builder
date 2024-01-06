@@ -8,18 +8,18 @@
 with lib; {
   environment = {
     systemPackages = with pkgs; [
-      inputs.nh.packages.${pkgs.system}.default
+      #inputs.nh.packages.${pkgs.system}.default
       nix-output-monitor
     ];
   };
 
   system.stateVersion = "24.05";
 
-  nh = {
-    enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 4d --keep 3";
-  };
+  # nh = {
+  #   enable = true;
+  #   clean.enable = true;
+  #   clean.extraArgs = "--keep-since 4d --keep 3";
+  # };
 
   nixpkgs = {
     config = {
