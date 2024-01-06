@@ -122,21 +122,21 @@ with lib; let
                             default = !cfg.builder.hardware.serverMode;
                           };
                           brand = mkOption {
-                            type = types.enum ["intel" "amd" "virtio"];
-                            default = "intel";
+                            type = types.nullOr (types.enum ["intel" "amd" "virtio"]);
+                            #default = "intel";
                             description = "Please select the type of CPU you have (intel/amd)";
                           };
 
                           generation = mkOption {
                             # cpu generation
-                            type = types.int;
-                            default = 0;
+                            type = types.nullOr types.int;
+                            #default = 0;
                             description = "Specify the CPU generation you have (intel only)";
                           };
                           sub-type = mkOption {
-                            type = types.enum ["mobile" "desktop" "virtual"];
+                            type = types.nullOr (types.enum ["mobile" "desktop" "virtual"]);
                             description = mdDoc "The type of CPU installed [desktop|mobile|virtual]";
-                            default = "mobile";
+                            #default = "mobile";
                           };
                           #useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
                         };
