@@ -8,7 +8,7 @@ with lib; let
   #allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   #cfg = config.presets."${builtins.head (builtins.attrNames enabled)}";
   names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
-  cfg = config.presets."${builtins.head enabled}"; 
+  cfg = config.presets."${builtins.head names}"; 
 
   enableModule = lib.types.submodule {
     options = {
