@@ -71,7 +71,6 @@ in {
               brand = "virtio";
               generation = 12;
               sub-type = "virtual";
-              useForGraphics = true;
             };
             functionality = {
               enable = false;
