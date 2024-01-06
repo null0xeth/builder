@@ -10,7 +10,7 @@ with lib; let
   allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
   #activePresetNames = builtins.attrValues (builtins.mapAttrs(_: config: config.name) activePresets);
-  cfg = config.presets.${allPresets};
+  cfg = config.presets."${builtins.head (builtins.attrNames allPresets)}";
   #presetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
 
   enableModule = lib.types.submodule {
