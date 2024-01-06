@@ -12,7 +12,7 @@ with lib; let
 in {
   imports = [./submodules];
   options.modules.hardware.cpu = mkOption {
-    type = types.attrsOf (types.submodule {
+    type = types.submodule {
       options = {
         enable = mkEnableOption "enable the default CPU profile";
         name = mkOption {
@@ -42,10 +42,9 @@ in {
               };
             };
           };
-          default = {};
         };
       };
-    });
+    };
   };
   config = mkIf cfg.enable {
     assertions = [

@@ -118,7 +118,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.profile.enable {
-      modules.hardware.cpu.${cfg.name} = {
+      modules.hardware.cpu = {
         enable = true;
         name = "${cfg.name}";
         settings = {

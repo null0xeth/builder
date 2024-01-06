@@ -590,21 +590,21 @@ with lib; let
 
     # HW:
     (mkIf cfg.builder.hardware.enable (mkMerge [
-      (mkIf cfg.builder.hardware.serverMode {
-        profiles.hardware.preset.${cfg.name} = {
-          enable = true;
-          name = "${cfg.name}";
-          profile = {
-              enable = false;
-          };
-          core = {
-            enable = false;
-          };
-          optionals = {
-            enable = false;
-          };
-        };
-      })
+      # (mkIf cfg.builder.hardware.serverMode {
+      #   profiles.hardware.preset.${cfg.name} = {
+      #     enable = true;
+      #     name = "${cfg.name}";
+      #     profile = {
+      #         enable = false;
+      #     };
+      #     core = {
+      #       enable = false;
+      #     };
+      #     optionals = {
+      #       enable = false;
+      #     };
+      #   };
+      # })
 
       (mkIf (!cfg.builder.hardware.serverMode) {
         profiles.hardware.preset.${cfg.name} = {
