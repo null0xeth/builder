@@ -121,6 +121,7 @@ in {
     (mkIf cfg.profile.cpu.enable {
       modules.hardware.cpu.${cfg.name} = {
         enable = true;
+        name = "${cfg.name}";
         settings = {
           cpuType = cfg.profile.cpu.brand;
           generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
