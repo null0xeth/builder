@@ -18,7 +18,7 @@ with lib; let
   };
 in {
   imports = [
-    #./cpu
+    ./cpu
     ./core
     ./extras
   ];

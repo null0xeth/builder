@@ -118,7 +118,7 @@ with lib; let
                         options = {
                           enable = mkOption {
                             type = types.bool;
-                            default = !cfg.builder.hardware.serverMode;
+                            default = false;
                           };
                           brand = mkOption {
                             type = types.nullOr (types.enum ["intel" "amd" "virtio"]);
