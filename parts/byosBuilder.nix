@@ -598,7 +598,7 @@ with lib; let
       });
 
       }
-          ])
+    ]))
 
     # FS:
     (mkIf cfg.builder.fromHardwareConfig.enable {
