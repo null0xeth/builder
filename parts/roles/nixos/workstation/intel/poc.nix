@@ -164,47 +164,47 @@ in {
 
           system = {
             enable = false;
-            profile = {
-              firmware = {
-                enable = true;
-                automatic-updates = {
-                  enable = true;
-                };
-              };
-            };
+            # profile = {
+            #   firmware = {
+            #     enable = true;
+            #     automatic-updates = {
+            #       enable = true;
+            #     };
+            #   };
+            # };
             fonts = {
-              enable = true;
-              packages = with pkgs; [
-                # Icon fonts:
-                material-symbols
+              enable = false;
+              # packages = with pkgs; [
+              #   # Icon fonts:
+              #   material-symbols
 
-                # Normal fonts:
-                font-awesome
-                jost
-                lexend
-                noto-fonts
-                noto-fonts-cjk
-                noto-fonts-emoji
-                roboto
+              #   # Normal fonts:
+              #   font-awesome
+              #   jost
+              #   lexend
+              #   noto-fonts
+              #   noto-fonts-cjk
+              #   noto-fonts-emoji
+              #   roboto
 
-                # NerdFonts:
-                (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
-              ];
-              defaults = {
-                serif = ["Noto Serif" "Noto Color Emoji"];
-                sansSerif = ["Noto Sans" "Noto Color Emoji"];
-                monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
-                emoji = ["Noto Color Emoji"];
-              };
+              #   # NerdFonts:
+              #   (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
+              # ];
+              # defaults = {
+              #   serif = ["Noto Serif" "Noto Color Emoji"];
+              #   sansSerif = ["Noto Sans" "Noto Color Emoji"];
+              #   monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
+              #   emoji = ["Noto Color Emoji"];
+              # };
             };
             sysutils = {
-              enable = true;
-              tools = {
-                common.enable = true;
-                direnv.enable = true;
-                envfs.enable = true;
-                ld.enable = true; # no point
-              };
+              enable = false;
+              # tools = {
+              #   common.enable = true;
+              #   direnv.enable = true;
+              #   envfs.enable = true;
+              #   ld.enable = true; # no point
+              # };
             };
           };
 
