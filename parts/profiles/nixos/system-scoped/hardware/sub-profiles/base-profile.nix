@@ -33,11 +33,7 @@ in {
 
   options.profiles.hardware = {
     preset = mkOption {
-      type = types.attrsOf (types.submodule ({
-        config,
-        name,
-        ...
-      }: {
+      type = types.attrsOf (types.submodule ({name, ...}: {
         options = {
           enable = mkEnableOption "the base hardware profile";
           name = mkOption {
@@ -55,16 +51,19 @@ in {
                       brand = mkOption {
                         type = types.nullOr types.str;
                         description = mdDoc "The manufacturer of your CPU";
+                        default = "intel";
                         #default = null;
                       };
                       generation = mkOption {
                         type = types.nullOr types.int;
                         description = mdDoc "The generation of your CPU (intel only)";
+                        default = 12;
                         #default = null;
                       };
                       sub-type = mkOption {
                         type = types.nullOr types.str;
                         description = mdDoc "The type of CPU installed [desktop|mobile]";
+                        default = "mobile";
                         #default = null;
                       };
                     };
