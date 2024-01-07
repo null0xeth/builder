@@ -139,9 +139,8 @@ in {
 
   config = let
     cfg = let
-      namez = builtins.head filterfunc;
+      namez = builtins.head filterfunc ? "none";
     in
-      mkIf (namez != {})
       config.profiles.system.preset."${namez}";
     # // {
     #   preset = "${namez}";
