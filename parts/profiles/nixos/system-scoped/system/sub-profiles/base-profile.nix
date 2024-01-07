@@ -129,7 +129,11 @@ with lib; let
   # sysutils = mkOption {
   #   default = {};
   #   type = types.submodule {
-  utilsSubmodule = {name, ...}: {
+  utilsSubmodule = {
+    config,
+    name,
+    ...
+  }: {
     options = {
       enable = mkEnableOption "the system utilities module";
       tools = mkOption {
@@ -168,7 +172,6 @@ in {
   imports = [
     ./utils
     ./firmware
-    #./networking
     ./submodules
   ];
 
