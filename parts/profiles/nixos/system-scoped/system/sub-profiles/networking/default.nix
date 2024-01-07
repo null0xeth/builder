@@ -19,7 +19,7 @@ with lib; let
   #filter = lib.filterAttrs (name: _: builtins.elem name base);
   #active = builtins.head (builtins.attrNames filter);
   filter = builtins.attrValues (lib.filterAttrs (_: v: v.enable) cfg1);
-  active = builtins.head filter;
+  active = last filter;
   #cfg = config.presets.${active};
   cfg = config.profiles.networking.preset.${active};
 in {
