@@ -3,16 +3,16 @@ flake.nixosModules.byosBuilder = moduleWithSystem (
   perSystem@{ self' }:
   { config, lib, ...}:
 with lib; let
-  cfg1 = config.presets;
+  #cfg1 = config.presets;
   #enabled = lib.filterAttrs (_: config: config.enable) cfg1;
   #allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   #cfg = config.presets."${builtins.head (builtins.attrNames enabled)}";
   # names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
   # cfg = config.presets."${builtins.head names}";
-  
-  filter = builtins.attrValues (lib.filterAttrs (_: v: v.enable) cfg1);
-  active = builtins.attrNames filter; 
-  cfg = config.presets.${active};
+
+  # filter = builtins.attrValues (lib.filterAttrs (_: v: v.enable) cfg1);
+  # active = builtins.attrNames filter;
+  cfg = config.presets;
 
   enableModule = lib.types.submodule {
     options = {
@@ -33,7 +33,7 @@ with lib; let
         name = mkOption {
           type = types.str;
           description = mdDoc "The slug used to refer to preset";
-          default = "bobTheBuilder";
+          default = name;
         };
         builder = mkOption {
           type = types.submodule {
@@ -570,6 +570,11 @@ with lib; let
           };
         };
       };
+      config = mkMerge [
+        {
+         name = mkDefault name;
+        }
+      ];
     }));
   };
   config = mkIf cfg.enable (mkMerge [
@@ -582,15 +587,18 @@ with lib; let
              ];
     }
     # Networking:
-    (mkIf cfg.builder.networking.enable {
-      profiles.networking.preset.${cfg.name} = {
-        enable = true;
-      } // (optionalAttrs (cfg.builder.networking.hostName != null) {
+    (mkIf cfg.builder.networking.enable (mkMerge [
+      {
+        profiles.networking.preset.${cfg.name} = {
+          enable = true;
+        }// (optionalAttrs (cfg.builder.networking.hostName != null) {
         inherit (cfg.builder.networking) hostName;
       }) // (optionalAttrs (cfg.builder.networking.extraHosts != null) {
         inherit (cfg.builder.networking) extraHosts;
       });
-    })
+
+      }
+          ])
 
     # FS:
     (mkIf cfg.builder.fromHardwareConfig.enable {
