@@ -141,12 +141,13 @@ in {
     cfg = let
       namez = builtins.head filterfunc;
     in
+      mkIf (namez != {})
       config.profiles.system.preset."${namez}";
     # // {
     #   preset = "${namez}";
     # };
   in
-    mkIf (namez != {}) (mkMerge [
+    mkIf (filterfunc != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
         (mkIf cfg.profile.firmware.enable {
           nixos-modules.system.firmware = {
