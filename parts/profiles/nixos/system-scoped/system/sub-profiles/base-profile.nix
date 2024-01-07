@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  filterfunc = builtins.head (builtins.attrNames (lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset));
+  filterfunc = builtins.head (builtins.attrNames (lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset)) or {};
   #cfg = config.profiles.system.preset.${filterfunc};
 
   enableModule = lib.types.submodule {
@@ -139,7 +139,7 @@ in {
   config = let
     cfg = config.profiles.system.preset.${filterfunc};
   in
-    mkMerge [
+    mkIf (filterfunc != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
         (mkIf cfg.profile.firmware.enable {
           nixos-modules.system.firmware = {
@@ -163,5 +163,5 @@ in {
           };
         })
       ]))
-    ];
+    ]);
 }
