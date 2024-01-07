@@ -16,11 +16,7 @@ in {
   options.modules.hardware.cpu = {
     preset = mkOption {
       default = {};
-      type = types.attrsOf (types.submodule ({
-        config,
-        name,
-        ...
-      }: {
+      type = types.attrsOf (types.submodule ({name, ...}: {
         options = {
           enable = mkEnableOption "the base hardware profile";
           name = mkOption {
@@ -59,37 +55,37 @@ in {
         };
       }));
     };
-    config = mkIf cfg.enable (mkMerge [
-      {
-        assertions = [
-          {
-            assertion = cfg.settings.generation != 0;
-            message = "Please specify the processor generation. It cannot be omitted";
-          }
-        ];
-      }
-      (mkIf (cfg.profile.enable && (cfg.profile.cpu != null)) {
-        hardware-cpu-presets = {
-          ${cfg.profile.cpu.brand} = {
-            ${cfg.profile.cpu.sub-type} = {
-              "${builtins.toString cfg.profile.cpu.generation}th" = {
-                enable = true;
-              };
+  };
+  config = mkIf cfg.enable (mkMerge [
+    {
+      assertions = [
+        {
+          assertion = cfg.settings.generation != 0;
+          message = "Please specify the processor generation. It cannot be omitted";
+        }
+      ];
+    }
+    (mkIf (cfg.profile.enable && (cfg.profile.cpu != null)) {
+      hardware-cpu-presets = {
+        ${cfg.profile.cpu.brand} = {
+          ${cfg.profile.cpu.sub-type} = {
+            "${builtins.toString cfg.profile.cpu.generation}th" = {
+              enable = true;
             };
           };
         };
-        #   "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
-        #     enable = true;
-        #   };
-      })
-
-      # hardware-cpu-presets = let
-      #   slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
-      # in {
-      #   ${slug} = {
+      };
+      #   "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
       #     enable = true;
       #   };
-      # };
-    ]);
-  };
+    })
+
+    # hardware-cpu-presets = let
+    #   slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+    # in {
+    #   ${slug} = {
+    #     enable = true;
+    #   };
+    # };
+  ]);
 }
