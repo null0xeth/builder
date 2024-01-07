@@ -163,7 +163,7 @@ in {
           };
 
           system = {
-            enable = true;
+            enable = false;
             # profile = {
             #   firmware = {
             #     enable = true;
@@ -173,7 +173,7 @@ in {
             #   };
             # };
             fonts = {
-              enable = true;
+              enable = false;
               # packages = with pkgs; [
               #   # Icon fonts:
               #   material-symbols
