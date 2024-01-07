@@ -68,11 +68,12 @@ in {
             };
             profile = {
               enable = false;
-              # cpu = {
-              # enable = false;
-              # brand = "virtio";
-              # generation = 12;
-              # sub-type = "virtual";
+              cpu = {
+                enable = false;
+                brand = "virtio";
+                generation = 12;
+                sub-type = "virtual";
+              };
             };
             optionals = {
               enable = false;
@@ -173,28 +174,28 @@ in {
             };
             fonts = {
               enable = false;
-              # packages = with pkgs; [
-              #   # Icon fonts:
-              #   material-symbols
+              packages = with pkgs; [
+                # Icon fonts:
+                material-symbols
 
-              #   # Normal fonts:
-              #   font-awesome
-              #   jost
-              #   lexend
-              #   noto-fonts
-              #   noto-fonts-cjk
-              #   noto-fonts-emoji
-              #   roboto
+                # Normal fonts:
+                font-awesome
+                jost
+                lexend
+                noto-fonts
+                noto-fonts-cjk
+                noto-fonts-emoji
+                roboto
 
-              #   # NerdFonts:
-              #   (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
-              # ];
-              # defaults = {
-              #   serif = ["Noto Serif" "Noto Color Emoji"];
-              #   sansSerif = ["Noto Sans" "Noto Color Emoji"];
-              #   monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
-              #   emoji = ["Noto Color Emoji"];
-              # };
+                # NerdFonts:
+                (nerdfonts.override {fonts = ["FiraCode" "JetBrainsMono"];})
+              ];
+              defaults = {
+                serif = ["Noto Serif" "Noto Color Emoji"];
+                sansSerif = ["Noto Sans" "Noto Color Emoji"];
+                monospace = ["JetBrainsMono Nerd Font" "Noto Color Emoji"];
+                emoji = ["Noto Color Emoji"];
+              };
             };
             sysutils = {
               enable = true;
