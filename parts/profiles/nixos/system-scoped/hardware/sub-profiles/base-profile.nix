@@ -119,11 +119,11 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf config.profile.enable {
+    (mkIf cfg.profile.enable {
       modules.hardware.cpu = {
         enable = true;
-        name = config.name;
-        inherit (config) profile;
+        name = cfg.name;
+        inherit (cfg) profile;
         # profile = {
         #   #cpuType = config.profile.cpu.brand;
         #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
@@ -131,20 +131,20 @@ in {
         # };
       };
     })
-    (mkIf config.core.enable {
+    (mkIf cfg.core.enable {
       modules.hardware.core = {
         enable = true;
         settings = {
-          audio.enable = config.core.audio.enable;
-          bluetooth.enable = config.core.bluetooth.enable;
-          storage.enable = config.core.storage.enable;
+          audio.enable = cfg.core.audio.enable;
+          bluetooth.enable = cfg.core.bluetooth.enable;
+          storage.enable = cfg.core.storage.enable;
         };
       };
     })
 
-    (mkIf config.optionals.enable {
+    (mkIf cfg.optionals.enable {
       modules.hardware.extras = {
-        enable = config.optionals.thunderbolt.enable || config.optionals.sensors.enable || config.optionals.peripherals.logitech.enable;
+        enable = cfg.optionals.thunderbolt.enable || cfg.optionals.sensors.enable || cfg.optionals.peripherals.logitech.enable;
         settings = {
           sensors.enable = true;
           thunderbolt.enable = true;
