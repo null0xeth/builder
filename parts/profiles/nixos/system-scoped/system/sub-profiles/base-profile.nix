@@ -5,8 +5,8 @@
   ...
 }:
 with lib; let
-  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  cfg = config.profiles.system.preset.${filterfunc config.profiles.system.preset};
+  filterfunc = builtins.head (builtins.attrNames (lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset));
+  #cfg = config.profiles.system.preset.${filterfunc};
 
   enableModule = lib.types.submodule {
     options = {
@@ -136,29 +136,32 @@ in {
     };
   };
 
-  config = mkMerge [
-    (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
-      (mkIf cfg.profile.firmware.enable {
-        nixos-modules.system.firmware = {
-          inherit (cfg.profile.firmware) enable automatic-updates;
-        };
+  config = let
+    cfg = config.profiles.system.preset.${filterfunc};
+  in
+    mkMerge [
+      (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
+        (mkIf cfg.profile.firmware.enable {
+          nixos-modules.system.firmware = {
+            inherit (cfg.profile.firmware) enable automatic-updates;
+          };
 
-        environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-      })
+          environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+        })
 
-      (mkIf cfg.fonts.enable {
-        fonts = {
-          enableDefaultPackages = true;
-          inherit (cfg.fonts) packages;
-          fontconfig.defaultFonts = cfg.fonts.defaults;
-        };
-      })
+        (mkIf cfg.fonts.enable {
+          fonts = {
+            enableDefaultPackages = true;
+            inherit (cfg.fonts) packages;
+            fontconfig.defaultFonts = cfg.fonts.defaults;
+          };
+        })
 
-      (mkIf cfg.sysutils.enable {
-        nixos-modules.sysutils = {
-          inherit (cfg.sysutils) enable tools;
-        };
-      })
-    ]))
-  ];
+        (mkIf cfg.sysutils.enable {
+          nixos-modules.sysutils = {
+            inherit (cfg.sysutils) enable tools;
+          };
+        })
+      ]))
+    ];
 }
