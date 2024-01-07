@@ -767,8 +767,16 @@ with lib; let
         {
           profiles.system.preset.${cfg.name} = {
             enable = true;
-            name = "${cfg.name}";
-            inherit (cfg.builder.system) profile fonts sysutils;
+            profileName = "${cfg.name}";
+            firmware.${cfg.name} = {
+              inherit (cfg.builder.system.profile.firmware) enable automatic-updates; 
+            };
+            fonts.${cfg.name} = {
+              inherit (cfg.builder.system.fonts) enable packages defaults;
+            };
+            sysutils.${cfg.name} = {
+              inherit (cfg.builder.system.sysutils) enable tools;
+            };
           };
         }]))
 
