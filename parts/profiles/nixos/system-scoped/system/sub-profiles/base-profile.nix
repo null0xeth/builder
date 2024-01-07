@@ -140,10 +140,10 @@ in {
     cfg = let
       namez = builtins.head filterfunc;
     in
-      config.profiles.system.preset
-      // {
-        preset = "${namez}";
-      };
+      config.profiles.system.preset."${namez}";
+    # // {
+    #   preset = "${namez}";
+    # };
   in
     mkIf (filterfunc != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
