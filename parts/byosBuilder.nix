@@ -505,9 +505,9 @@ with lib; let
                       type = types.submodule {
                         options = {
                           enable = mkOption {
-                      type = types.bool;
-                      default = false;
-                    };
+                            type = types.bool;
+                            default = false;
+                          };
                           packages = mkOption {
                             type = with types; listOf package;
                             description = mdDoc "Font packages to install";

@@ -6,8 +6,9 @@
 }:
 with lib; let
   filter = lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset;
-  filterfunc = builtins.head (builtins.attrNames filter);
-  cfg = config.profiles.system.preset;
+  filterv2 = lib.filterAttrs (name: _: (builtins.elem name filter));
+  filterfunc = builtins.head (builtins.attrNames filterv2);
+  cfg = config.profiles.system.preset.${filterfunc};
 
   enableModule = lib.types.submodule {
     options = {
