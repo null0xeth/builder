@@ -59,7 +59,7 @@ in {
           };
 
           hardware = {
-            enable = false;
+            enable = true;
             core = {
               enable = false;
               audio.enable = false;
