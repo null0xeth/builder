@@ -13,9 +13,11 @@ with lib; let
   # filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
   # active = builtins.head (builtins.attrNames filter);
   # cfg = config.profiles.hardware.preset.${active};
-  cfg1 = config.profiles.hardware.preset;
-  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
-  cfg = config.profiles.hardware.preset.${builtins.head (builtins.attrNames enabled)};
+  base = config.profiles.hardware;
+  cfg = config.profiles.hardware.preset._active;
+  # cfg1 = config.profiles.hardware.preset;
+  # enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  # cfg = config.profiles.hardware.preset.${builtins.head (builtins.attrNames enabled)};
 
   enableModule = lib.types.submodule {
     options = {
@@ -30,6 +32,10 @@ in {
   ];
 
   options.profiles.hardware = {
+    _active = mkOption {
+      readOnly = true;
+      type = types.nullOr types.str;
+    };
     preset = mkOption {
       type = types.attrsOf (types.submodule ({
         config,
@@ -112,6 +118,16 @@ in {
             };
           };
         };
+        config = mkMerge [
+          {
+            name = mkDefault name;
+          }
+          (mkIf config.enable {
+            base = {
+              _active = name;
+            };
+          })
+        ];
       }));
     };
   };
