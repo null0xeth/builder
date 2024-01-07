@@ -160,7 +160,7 @@ in {
           fonts = {
             enableDefaultPackages = true;
             inherit (cfg.fonts) packages;
-            fontconfig.defaultFonts = mkIf (cfg.fonts.defaults != {}) cfg.fonts.default;
+            fontconfig.defaultFonts = cfg.fonts.default;
           };
         })
 
