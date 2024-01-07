@@ -120,21 +120,15 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     {
-      modules.hardware.cpu = {
-        preset.${cfg.name} = mkMerge [
-          {
-            enable = cfg.profile.enable;
-            name = cfg.name;
-          }
-          (mkIf cfg.profile.enable {
-            inherit (cfg) profile;
-          })
-          # profile = {
-          #   #cpuType = config.profile.cpu.brand;
-          #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
-          #   inherit (config.profile.cpu) sub-type generation cpuType;
-          # };
-        ];
+      modules.hardware.cpu.preset.${cfg.name} = {
+        enable = cfg.profile.enable;
+        name = cfg.name;
+        inherit (cfg) profile;
+        # profile = {
+        #   #cpuType = config.profile.cpu.brand;
+        #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
+        #   inherit (config.profile.cpu) sub-type generation cpuType;
+        # };
       };
     }
     (mkIf cfg.core.enable {
