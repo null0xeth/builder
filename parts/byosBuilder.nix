@@ -696,14 +696,14 @@ with lib; let
       })
 
       # System:
-      (mkIf cfg.builder.system.enable (mkMerge [
-        {
-          profiles.system.preset.${cfg.name} = {
-            enable = true;
-            name = "${cfg.name}";
-            inherit (cfg.builder.system) profile fonts sysutils;
-          };
-        }
+      # (mkIf cfg.builder.system.enable (mkMerge [
+      #   {
+      #     profiles.system.preset.${cfg.name} = {
+      #       enable = true;
+      #       name = "${cfg.name}";
+      #       inherit (cfg.builder.system) profile fonts sysutils;
+      #     };
+      #   }
 
         # (mkIf cfg.builder.system.profile.firmware.enable {
         #   profiles.system.preset.${cfg.name} = {
@@ -720,7 +720,7 @@ with lib; let
         #     inherit (cfg.builder.system) sysutils;
         #   };
         # })
-      ]))
+      #]))
 
       # Security:
       (mkIf cfg.builder.security.enable (mkMerge [
