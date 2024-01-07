@@ -209,7 +209,7 @@ in {
           };
 
           security = {
-            enable = false;
+            enable = true;
             modules = {
               agenix = {
                 enable = false;
