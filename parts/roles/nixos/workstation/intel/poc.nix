@@ -163,7 +163,7 @@ in {
           };
 
           system = {
-            enable = true;
+            enable = false;
             profile = {
               firmware = {
                 enable = true;
