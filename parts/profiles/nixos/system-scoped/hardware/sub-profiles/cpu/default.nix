@@ -35,18 +35,19 @@ in {
                   type = types.submodule {
                     options = {
                       brand = mkOption {
-                        type = types.nullOr types.str;
+                        type = types.str;
                         description = mdDoc "The manufacturer of your CPU";
-                        #default = null;
+                        default = "none";
                       };
                       generation = mkOption {
-                        type = types.nullOr types.int;
+                        type = types.int;
                         description = mdDoc "The generation of your CPU (intel only)";
-                        #default = null;
+                        default = 69;
                       };
                       sub-type = mkOption {
-                        type = types.nullOr types.str;
+                        type = types.str;
                         description = mdDoc "The type of CPU installed [desktop|mobile]";
+                        default = "none";
                         #default = null;
                       };
                     };
@@ -69,14 +70,8 @@ in {
       ];
     }
     (mkIf (cfg.profile.enable && (cfg.profile.cpu != null)) {
-      hardware-cpu-presets = {
-        ${cfg.profile.cpu.brand ? "none"} = {
-          ${cfg.profile.cpu.sub-type ? "none"} = {
-            "${builtins.toString (cfg.profile.cpu.generation ? "none") "th"}" = {
-              enable = true;
-            };
-          };
-        };
+      hardware-cpu-presets."${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
+        enable = true;
       };
       #   "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
       #     enable = true;
