@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  filterfunc = builtins.head (builtins.attrNames (lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset)) or {};
+  filterfunc = builtins.attrNames (lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset) or {};
   #cfg = config.profiles.system.preset.${filterfunc};
 
   enableModule = lib.types.submodule {
