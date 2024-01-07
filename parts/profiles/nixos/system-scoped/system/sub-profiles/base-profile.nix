@@ -138,7 +138,11 @@ in {
 
   config = let
     name = builtins.head filterfunc;
-    cfg = config.profiles.system.preset.${name};
+    cfg =
+      config.profiles.system.preset
+      // {
+        preset = "${name}";
+      };
   in
     mkIf (filterfunc != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
