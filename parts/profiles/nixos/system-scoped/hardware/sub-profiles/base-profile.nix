@@ -122,17 +122,17 @@ in {
       };
     })
 
-    # (mkIf (!cfg.profile.cpu.enable) {
-    #   modules.hardware.cpu.${cfg.name} = {
-    #     enable = false;
-    #     name = "${cfg.name}";
-    #     settings = {
-    #       cpuType = null;
-    #       generation = null;
-    #       sub-type = null;
-    #     };
-    #   };
-    # })
+    (mkIf (!cfg.profile.enable) {
+      modules.hardware.cpu.${cfg.name} = {
+        enable = false;
+        # name = "${cfg.name}";
+        # settings = {
+        #   cpuType = null;
+        #   generation = null;
+        #   sub-type = null;
+        # };
+      };
+    })
 
     (mkIf cfg.core.enable {
       modules.hardware.core = {
