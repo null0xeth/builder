@@ -15,7 +15,7 @@ in {
   imports = [./submodules];
   options.modules.hardware.cpu = mkOption {
     default = {};
-    type = types.submodule ({
+    type = types.attrsOf (types.submodule ({
       config,
       name,
       ...
@@ -56,7 +56,7 @@ in {
           };
         };
       };
-    });
+    }));
   };
   config = mkIf cfg.enable (mkMerge [
     {
