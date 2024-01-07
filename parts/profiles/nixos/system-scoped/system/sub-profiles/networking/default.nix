@@ -47,8 +47,8 @@ in {
           allowPing = true;
           logRefusedConnections = lib.mkDefault false;
         };
-        useNetworkd = lib.mkDefault true;
-        useDHCP = lib.mkDefault false;
+        useNetworkd = mkDefault true;
+        useDHCP = mkDefault false;
       };
 
       systemd = {
