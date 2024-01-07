@@ -146,7 +146,7 @@ in {
     #   preset = "${namez}";
     # };
   in
-    mkIf (filterfunc != {}) (mkMerge [
+    mkIf (namez != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
         (mkIf cfg.profile.firmware.enable {
           nixos-modules.system.firmware = {
