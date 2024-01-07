@@ -8,7 +8,7 @@ with lib; let
   #allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   #cfg = config.presets."${builtins.head (builtins.attrNames enabled)}";
   names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
-  cfg = config.presets."${builtins.head names}"; 
+  cfg = config.presets."${builtins.head names}";
 
   enableModule = lib.types.submodule {
     options = {
@@ -23,7 +23,7 @@ with lib; let
   ];
 
   options.presets = mkOption {
-    type = types.attrsOf (types.submodule {
+    type = types.attrsOf (types.submodule ({name, config, ...}: {
       options = {
         enable = mkEnableOption "the preset builder";
         name = mkOption {
@@ -566,9 +566,8 @@ with lib; let
           };
         };
       };
-    });
+    }));
   };
-
   config = mkIf cfg.enable (mkMerge [
     {
       assertions = [
