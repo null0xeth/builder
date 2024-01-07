@@ -12,7 +12,7 @@ with lib; let
   
   filter = lib.filterAttrs (name: _: name.enable) cfg1;
   active = builtins.head (builtins.attrNames filter); 
-  cfg = config.presets.active;
+  cfg = config.presets."${active}";
 
   enableModule = lib.types.submodule {
     options = {
