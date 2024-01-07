@@ -120,7 +120,7 @@ in {
 
   config = mkIf cfg.enable (mkMerge [
     (mkIf cfg.profile.enable {
-      modules.hardware.cpu.${cfg.name} = {
+      modules.hardware.cpu.preset.${cfg.name} = {
         enable = true;
         name = cfg.name;
         inherit (cfg) profile;
