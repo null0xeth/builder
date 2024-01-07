@@ -6,7 +6,7 @@
 }:
 with lib; let
   base = name: builtins.hasAttr ("${name}" config.profiles.system.preset);
-  filter = lib.filterAttrs (n: _: base n);
+  filter = lib.filterAttrs (n: _: "${base n}");
   filterfunc = builtins.head (builtins.attrNames filter);
   cfg = config.profiles.system.preset."${filterfunc}";
 
