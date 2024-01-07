@@ -5,21 +5,11 @@
   ...
 }:
 with lib; let
-  # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
-  #cfg1 = config.profiles.networking.preset;
-  #filter = filterAttrs (name: _: name.enable) base;
-  #names = builtins.attrNames filter;
-  #allPresets = builtins.mapAttrs (_: config: config.name) base;
-  #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
-  #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
-  #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
-  #filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: preset.${value}.enable) config.profiles.networking));
-  #active = builtins.head (builtins.attrNames filter);
-  #cfg = config.presets.${active};
-  cfg1 = config.profiles.networking.preset;
-  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
-  cfg = config.profiles.networking.preset.${builtins.head (builtins.attrNames enabled)};
+  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
+  # cfg1 = config.profiles.networking.preset;
+  # enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  # cfg = config.profiles.networking.preset.${builtins.head (builtins.attrNames enabled)};
 in {
   options.profiles.networking = {
     preset = mkOption {
@@ -45,12 +35,6 @@ in {
             description = mdDoc "Extra hosts to add to /etc/hosts";
           };
         };
-
-        config = mkMerge [
-          {
-            name = mkDefault name;
-          }
-        ];
       }));
     };
   };
@@ -67,8 +51,8 @@ in {
           logRefusedConnections = lib.mkDefault false;
         };
       };
-      networking.useNetworkd = true;
-      networking.useDHCP = mkDefault false;
+      networking.useNetworkd = lib.mkDefault true;
+      networking.useDHCP = lib.mkDefault false;
 
       systemd = {
         services = {
