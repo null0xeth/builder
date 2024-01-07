@@ -72,7 +72,7 @@ in {
       hardware-cpu-presets = {
         ${cfg.profile.cpu.brand ? "none"} = {
           ${cfg.profile.cpu.sub-type ? "none"} = {
-            ${builtins.toString (cfg.profile.cpu.generation ? "none") "th"} = {
+            "${builtins.toString (cfg.profile.cpu.generation ? "none") "th"}" = {
               enable = true;
             };
           };
