@@ -197,6 +197,13 @@ in {
               type = with types; attrsOf (submodule utilsSubmodule);
             };
           };
+          config = {
+            cfg.${name} =
+              {
+                enable = config.enable;
+              }
+              // {inherit (config) profileName firmware fonts sysutils;};
+          };
         }));
     };
   };
