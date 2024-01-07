@@ -59,7 +59,7 @@ in {
           };
 
           hardware = {
-            enable = true;
+            enable = false;
             core = {
               enable = false;
               audio.enable = false;
@@ -84,7 +84,7 @@ in {
           };
 
           kernel = {
-            enable = true;
+            enable = false;
             settings = {
               useLatest = true;
               kernelParams = {
@@ -163,7 +163,7 @@ in {
           };
 
           system = {
-            enable = true;
+            enable = false;
             profile = {
               firmware = {
                 enable = false;
@@ -198,7 +198,7 @@ in {
               };
             };
             sysutils = {
-              enable = true;
+              enable = false;
               tools = {
                 common.enable = true;
                 direnv.enable = true;
@@ -209,7 +209,7 @@ in {
           };
 
           security = {
-            enable = true;
+            enable = false;
             modules = {
               agenix = {
                 enable = false;
