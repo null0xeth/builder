@@ -43,9 +43,8 @@ with lib; let
                   options = {
                     enable = mkEnableOption "tba";
                     hostName = mkOption {
-                      type = types.str;
+                      type = types.nullOr types.str;
                       description = mdDoc "The hostname of the to-be configured system";
-                      default = "honkmaster-007";
                     };
                     extraHosts = mkOption {
                       type = types.nullOr types.lines;
