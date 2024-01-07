@@ -159,7 +159,7 @@ in {
           fonts = {
             enableDefaultPackages = true;
             inherit (cfg.fonts) packages;
-            fontconfig.defaultFonts = cfg.fonts.defaults;
+            fontconfig.defaultFonts = optionalAttrs (cfg.fonts.defaults != {}) cfg.fonts.defaults;
           };
         })
 
