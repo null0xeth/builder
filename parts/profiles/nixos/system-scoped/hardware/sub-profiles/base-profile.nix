@@ -11,7 +11,9 @@ with lib; let
 
   enabled = lib.filterAttrs (_: config: config.enable) cfg1;
   names = builtins.attrNames enabled;
-  cfg = config.profiles.hardware.preset."${builtins.head names}";
+
+  filter = lib.filterAttrs (name: _: builtins.elem name cfg1);
+  cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames filter)}";
 
   enableModule = lib.types.submodule {
     options = {
