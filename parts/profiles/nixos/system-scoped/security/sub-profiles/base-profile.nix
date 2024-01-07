@@ -18,6 +18,7 @@ in {
 
   options.profiles.security = {
     preset = mkOption {
+      default = {};
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the default security profile template";
@@ -29,19 +30,24 @@ in {
           };
 
           modules = mkOption {
+            default = {};
             type = types.submodule {
               options = {
                 agenix = mkOption {
+                  default = {};
                   type = enableModule;
                 };
                 yubikey = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       enable = mkEnableOption "support for yubikey mfa";
                       settings = mkOption {
+                        default = {};
                         type = types.submodule {
                           options = {
                             configuration = mkOption {
+                              default = {};
                               type = types.submodule {
                                 options = {
                                   idVendor = mkOption {
@@ -58,9 +64,11 @@ in {
                               };
                             };
                             udev = mkOption {
+                              default = {};
                               type = enableModule;
                             };
                             touchDetector = mkOption {
+                              default = {};
                               type = enableModule;
                             };
                           };
