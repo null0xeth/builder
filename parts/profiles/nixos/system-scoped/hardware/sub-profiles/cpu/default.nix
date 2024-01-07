@@ -56,13 +56,13 @@ in {
       }
     ];
     #hardware-cpu-presets.${slug} = {
-    hardware-cpu-presets = let
-      slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
-    in {
-      ${slug} = {
-        enable = true;
-      };
-    };
+    # hardware-cpu-presets = let
+    #   slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+    # in {
+    #   ${slug} = {
+    #     enable = true;
+    #   };
+    # };
   };
   #};
 }
