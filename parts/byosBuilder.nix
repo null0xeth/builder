@@ -105,6 +105,7 @@ with lib; let
                       default = "${cfg.name}";
                     };
                     profile = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "lol";
@@ -114,17 +115,18 @@ with lib; let
                                 brand = mkOption {
                                   type = types.nullOr types.str;
                                   description = mdDoc "The manufacturer of your CPU";
+                                  default = "intel";
                                   #default = null;
                                 };
                                 generation = mkOption {
                                   type = types.nullOr types.int;
                                   description = mdDoc "The generation of your CPU (intel only)";
-                                  #default = null;
+                                  default = 12;
                                 };
                                 sub-type = mkOption {
                                   type = types.nullOr types.str;
                                   description = mdDoc "The type of CPU installed [desktop|mobile]";
-                                  #default = null;
+                                  default = "mobile";
                                 };
                               };
                             };
