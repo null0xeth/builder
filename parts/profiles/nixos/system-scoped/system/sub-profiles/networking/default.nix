@@ -13,7 +13,7 @@ with lib; let
   #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
   #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
 
-  filter = lib.filterAttrs (name: _: (builtins.elem name base));
+  filter = lib.filterAttrs (name: _: builtins.elem name base);
   active = builtins.head (builtins.attrNames filter);
   cfg = config.profiles.networking.preset.${active};
 in {
