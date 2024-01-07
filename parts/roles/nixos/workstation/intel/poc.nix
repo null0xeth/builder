@@ -166,14 +166,14 @@ in {
             enable = true;
             profile = {
               firmware = {
-                enable = false;
+                enable = true;
                 automatic-updates = {
-                  enable = false;
+                  enable = true;
                 };
               };
             };
             fonts = {
-              enable = false;
+              enable = true;
               packages = with pkgs; [
                 # Icon fonts:
                 material-symbols
@@ -198,7 +198,7 @@ in {
               };
             };
             sysutils = {
-              enable = false;
+              enable = true;
               tools = {
                 common.enable = true;
                 direnv.enable = true;
