@@ -69,7 +69,7 @@ in {
             profile = {
               enable = false;
               cpu = {
-                enable = false;
+                #enable = false;
                 brand = "virtio";
                 generation = 12;
                 sub-type = "virtual";
