@@ -10,7 +10,7 @@ with lib; let
   # names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
   # cfg = config.presets."${builtins.head names}";
   
-  filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
+  filter = lib.filterAttrs (name: _: name.enable) cfg1;
   active = builtins.head (builtins.attrNames filter); 
   cfg = config.presets.${active};
 
