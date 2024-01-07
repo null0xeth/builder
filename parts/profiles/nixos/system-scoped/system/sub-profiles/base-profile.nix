@@ -7,7 +7,7 @@
 with lib; let
   filter = lib.filterAttrs (n: _: config.profiles.system.preset.${n}.enable) config.profiles.system.preset;
   filterfunc = builtins.attrNames filter;
-  #cfg = config.profiles.system.preset.${filterfunc};
+  cfg = config.profiles.system.preset;
 
   enableModule = lib.types.submodule {
     options = {
@@ -137,38 +137,38 @@ in {
     };
   };
 
-  config = let
-    cfg = let
-      namez = builtins.head filterfunc ? "none";
-    in
-      config.profiles.system.preset."${namez}";
-    # // {
-    #   preset = "${namez}";
-    # };
-  in
-    mkIf (filterfunc != {}) (mkMerge [
-      (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
-        (mkIf cfg.profile.firmware.enable {
-          nixos-modules.system.firmware = {
-            inherit (cfg.profile.firmware) enable automatic-updates;
-          };
+  # config = let
+  #   cfg = let
+  #     namez = builtins.head filterfunc ? "none";
+  #   in
+  #     config.profiles.system.preset."${namez}";
+  #   # // {
+  #   #   preset = "${namez}";
+  #   # };
+  # in
+  config = mkIf (cfg != {}) (mkMerge [
+    (mkIf cfg.${filterfunc}.enable (mkMerge [
+      (mkIf cfg.profile.firmware.enable {
+        nixos-modules.system.firmware = {
+          inherit (cfg.profile.firmware) enable automatic-updates;
+        };
 
-          environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-        })
+        environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+      })
 
-        (mkIf cfg.fonts.enable {
-          fonts = {
-            enableDefaultPackages = true;
-            inherit (cfg.fonts) packages;
-            fontconfig.defaultFonts = cfg.fonts.default;
-          };
-        })
+      (mkIf cfg.fonts.enable {
+        fonts = {
+          enableDefaultPackages = true;
+          inherit (cfg.fonts) packages;
+          fontconfig.defaultFonts = cfg.fonts.default;
+        };
+      })
 
-        (mkIf cfg.sysutils.enable {
-          nixos-modules.sysutils = {
-            inherit (cfg.sysutils) enable tools;
-          };
-        })
-      ]))
-    ]);
+      (mkIf cfg.sysutils.enable {
+        nixos-modules.sysutils = {
+          inherit (cfg.sysutils) enable tools;
+        };
+      })
+    ]))
+  ]);
 }
