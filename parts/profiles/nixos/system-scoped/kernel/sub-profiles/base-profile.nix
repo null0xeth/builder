@@ -40,47 +40,51 @@ with lib; let
 
       enable = mkEnableOption "the default kernel profile template";
       general = mkOption {
+        default = {};
         type = types.submodule {
           options = {
             enable = mkEnableOption (mdDoc "the general kernel configuration module");
             useLatest = mkEnableOption "the latest kernel packages";
             kernelPackages = mkOption {
-              type = types.nullOr types.raw;
+              type = types.raw;
               description = "If `useLatest` is disabled, specify the packages here";
-              default = null;
+              default = pkgs.linuxPackages_latest;
             };
             kernelModules = mkOption {
               type = types.nullOr (types.listOf types.str);
               description = "Kernel modules to be installed";
-              default = null;
+              default = [];
             };
             kernelParams = mkOption {
+              default = {};
               type = types.submodule {
                 options = {
                   useDefaults = mkEnableOption "the default kernel parameters";
                   customParams = mkOption {
                     type = types.nullOr (types.listOf types.str);
                     description = "Kernel parameters";
-                    default = null;
+                    default = [];
                   };
                 };
               };
             };
             initrd = mkOption {
+              default = {};
               type = types.submodule {
                 options = {
                   systemd = mkOption {
+                    default = {};
                     type = enableModule;
                   };
                   kernelModules = mkOption {
                     type = types.nullOr (types.listOf types.str);
                     description = "Kernel modules to always be installed";
-                    default = null;
+                    default = [];
                   };
                   availableKernelModules = mkOption {
                     type = types.nullOr (types.listOf types.str);
                     description = "Kernel modules to be installed";
-                    default = null;
+                    default = [];
                   };
                 };
               };
@@ -90,18 +94,23 @@ with lib; let
       };
 
       tweaks = mkOption {
+        default = {};
         type = types.submodule {
           options = {
             networking = mkOption {
+              default = {};
               type = enableModule;
             };
             hardening = mkOption {
+              default = {};
               type = enableModule;
             };
             failsaves = mkOption {
+              default = {};
               type = enableModule;
             };
             clean = mkOption {
+              default = {};
               type = enableModule;
             };
           };
@@ -109,13 +118,16 @@ with lib; let
       };
 
       boot = mkOption {
+        default = {};
         type = types.submodule {
           options = {
             enable = mkEnableOption "blabla";
             general = mkOption {
+              default = {};
               type = nestedEnableModule "silent";
             };
             tmpfs = mkOption {
+              default = {};
               type = types.submodule {
                 options = {
                   enable = mkEnableOption "the temporary filesystem";
@@ -127,9 +139,11 @@ with lib; let
               };
             };
             loader = mkOption {
+              default = {};
               type = types.submodule {
                 options = {
                   systemd = mkOption {
+                    default = {};
                     type = types.submodule {
                       options = {
                         enable = mkEnableOption "systemd boot for this system";
@@ -142,9 +156,11 @@ with lib; let
                     };
                   };
                   settings = mkOption {
+                    default = {};
                     type = types.submodule {
                       options = {
                         efiSupport = mkOption {
+                          default = {};
                           type = enableModule;
                         };
                         timeout = mkOption {
@@ -153,6 +169,7 @@ with lib; let
                           description = mdDoc "the maximum allowed time in seconds to time out kernel operations";
                         };
                         copyToTmpfs = mkOption {
+                          default = {};
                           type = enableModule;
                         };
                       };
@@ -166,6 +183,7 @@ with lib; let
       };
 
       optionals = mkOption {
+        default = {};
         type = nestedEnableModule "ricemyttydotcom";
       };
     };
