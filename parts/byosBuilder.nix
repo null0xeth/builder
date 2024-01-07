@@ -800,7 +800,7 @@ with lib; let
         {
           profiles.security.preset.${cfg.name} = {
             enable = cfg.builder.security.enable;
-            name = "${cfg.name}";
+            name = cfg.name;
             modules = {
               agenix.enable = cfg.builder.security.modules.agenix.enable;
               yubikey = {

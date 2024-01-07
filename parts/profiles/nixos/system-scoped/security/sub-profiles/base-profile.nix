@@ -33,6 +33,7 @@ in {
             default = {};
             type = types.submodule {
               options = {
+                enable = mkEnableOption "tba";
                 agenix = mkOption {
                   default = {};
                   type = enableModule;
@@ -86,26 +87,6 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.modules.yubikey.enable {
-      assertions = [
-        {
-          assertion = (cfg.modules.yubikey.settings.configuration.idVendor != null) && (cfg.modules.yubikey.settings.configuration.idProduct != null);
-          message = "You have enabled the `yubikey` profile, but omitted the idVendor and idProduct";
-        }
-      ];
-
-      security-modules.yubikey = {
-        enable = true;
-        settings = {
-          inherit (cfg.modules.yubikey.settings) udev touchDetector configuration;
-        };
-      };
-    })
-
-    (mkIf cfg.modules.agenix.enable {
-      nix.settings.extra-sandbox-paths = ["/var/tmp/agenix-rekey"];
-      systemd.tmpfiles.rules = ["d /var/tmp/agenix-rekey 1777 root root"];
-    })
     {
       environment.systemPackages = with pkgs; [
         pinentry-gnome
@@ -171,5 +152,25 @@ in {
         ];
       };
     }
+    (mkIf cfg.modules.yubikey.enable {
+      assertions = [
+        {
+          assertion = (cfg.modules.yubikey.settings.configuration.idVendor != null) && (cfg.modules.yubikey.settings.configuration.idProduct != null);
+          message = "You have enabled the `yubikey` profile, but omitted the idVendor and idProduct";
+        }
+      ];
+
+      security-modules.yubikey = {
+        enable = true;
+        settings = {
+          inherit (cfg.modules.yubikey.settings) udev touchDetector configuration;
+        };
+      };
+    })
+
+    (mkIf cfg.modules.agenix.enable {
+      nix.settings.extra-sandbox-paths = ["/var/tmp/agenix-rekey"];
+      systemd.tmpfiles.rules = ["d /var/tmp/agenix-rekey 1777 root root"];
+    })
   ]);
 }
