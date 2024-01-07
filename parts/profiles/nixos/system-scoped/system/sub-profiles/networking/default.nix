@@ -8,17 +8,21 @@ with lib; let
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
   base = config.profiles.networking.preset;
+  filter = lib.filterAttrs (name: _: name.enable) base;
+  names = builtins.attrNames filter;
+
   #allPresets = builtins.mapAttrs (_: config: config.name) base;
   #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
   #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
   #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
 
-  filter = lib.filterAttrs (name: _: builtins.elem name base);
-  active = builtins.head (builtins.attrNames filter);
-  cfg = config.profiles.networking.preset.${active};
+  #filter = lib.filterAttrs (name: _: builtins.elem name base);
+  #active = builtins.head (builtins.attrNames filter);
+  cfg = config.profiles.networking.preset.${builtins.head names};
 in {
   options.profiles.networking = {
     preset = mkOption {
+      default = {};
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the default graphical networking template";
