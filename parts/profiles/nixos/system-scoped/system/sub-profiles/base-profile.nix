@@ -156,7 +156,11 @@ in {
     profiles.system = mkOption {
       default = {};
       type = with types;
-        attrsOf (submodule ({name, ...}: {
+        attrsOf (submodule ({
+          name,
+          config,
+          ...
+        }: {
           options = {
             enable = mkOption {
               type = bool;
@@ -209,7 +213,7 @@ in {
       fonts = {
         enableDefaultPackages = true;
         inherit (cfg.fonts) packages;
-        fontconfig.defaultFonts = cfg.fonts.defaults;
+        fontconfig.defaultFonts = {inherit (cfg.fonts) defaults;};
       };
     })
 
