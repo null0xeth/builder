@@ -69,10 +69,10 @@ in {
             profile = {
               enable = false;
               cpu = {
-                #enable = false;
-                brand = "virtio";
-                generation = 12;
-                sub-type = "virtual";
+                ##enable = false;
+                # brand = "virtio";
+                # generation = 12;
+                # sub-type = "virtual";
               };
             };
             optionals = {
