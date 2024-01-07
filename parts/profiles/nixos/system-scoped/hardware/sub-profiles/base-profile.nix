@@ -7,14 +7,15 @@ with lib; let
   #inherit (lib) mkEnableOption mkOption mdDoc types mkIf mkMerge;
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
+  # cfg1 = config.profiles.hardware.preset;
+  # enabled = lib.filterAttrs (_: config: config.enable) cfg1;
+  # names = builtins.attrNames enabled;
+  # filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
+  # active = builtins.head (builtins.attrNames filter);
+  # cfg = config.profiles.hardware.preset.${active};
   cfg1 = config.profiles.hardware.preset;
-
-  enabled = lib.filterAttrs (_: config: config.enable) cfg1;
-  names = builtins.attrNames enabled;
-
-  filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
-  active = builtins.head (builtins.attrNames filter);
-  cfg = config.profiles.hardware.preset.${active};
+  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  cfg = config.profiles.hardware.preset.${builtins.head (builtins.attrNames enabled)};
 
   enableModule = lib.types.submodule {
     options = {
