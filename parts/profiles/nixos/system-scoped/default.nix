@@ -2,7 +2,7 @@
   imports = [
     #./kernel
     #./system
-    ./hardware
+    #./hardware
     ./security
     ./graphical
   ];
