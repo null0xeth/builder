@@ -26,7 +26,10 @@ in {
       default = {};
       type = types.attrsOf (types.submodule {
         options = {
-          enable = mkEnableOption "the default system profile template";
+          enable = mkOption {
+            type = types.bool;
+            default = false;
+          };
           name = mkOption {
             type = types.str;
             description = mdDoc "The slug used to refer to this profile";
