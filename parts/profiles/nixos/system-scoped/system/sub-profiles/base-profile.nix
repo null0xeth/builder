@@ -14,10 +14,10 @@ with lib; let
   # filterfunc = builtins.head (builtins.attrNames filter);
   # cfg2 = config.profiles.system.preset."${filterfunc}";
   # cfg = config.profiles.system.preset;
-  cfg1 = config.profiles.system;
-  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
-  cfg = config.profiles.system.${builtins.head (builtins.attrNames enabled)};
-
+  # ....
+  # cfg1 = config.profiles.system;
+  # enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  # cfg = config.profiles.system.${builtins.head (builtins.attrNames enabled)};
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
@@ -28,7 +28,11 @@ with lib; let
   #   preset = mkOption {
   #     default = {};
   #     type = types.attrsOf (types.submodule ({name, ...}: {
-  firmwareSubmodule = {name, ...}: {
+  firmwareSubmodule = {
+    config,
+    name,
+    ...
+  }: {
     options = {
       # enable = mkOption {
       #   type = types.bool;
@@ -58,6 +62,15 @@ with lib; let
               };
             };
           };
+          config = mkIf config.enable (mkMerge [
+            {
+              nixos-modules.system.firmware = {
+                inherit (config.firmware) enable automatic-updates;
+              };
+
+              environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+            }
+          ]);
         };
       };
     };
@@ -66,7 +79,11 @@ with lib; let
   # fonts = mkOption {
   #   default = {};
   #   type = types.submodule {
-  fontsSubmodule = {name, ...}: {
+  fontsSubmodule = {
+    config,
+    name,
+    ...
+  }: {
     options = {
       enable = mkEnableOption "the font configuration module";
       packages = mkOption {
@@ -98,6 +115,15 @@ with lib; let
         };
       };
     };
+    config = mkIf config.enable (mkMerge [
+      {
+        fonts = {
+          enableDefaultPackages = true;
+          inherit (config.fonts) packages;
+          fontconfig.defaultFonts = {inherit (config.fonts) defaults;};
+        };
+      }
+    ]);
   };
 
   # sysutils = mkOption {
@@ -130,6 +156,13 @@ with lib; let
         };
       };
     };
+    config = mkIf config.enable (mkMerge [
+      {
+        nixos-modules.sysutils = {
+          inherit (config.sysutils) enable tools;
+        };
+      }
+    ]);
   };
 in {
   imports = [
@@ -219,27 +252,27 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.firmware.enable {
-      nixos-modules.system.firmware = {
-        inherit (cfg.firmware) enable automatic-updates;
-      };
+  # config = mkIf cfg.enable (mkMerge [
+  # (mkIf cfg.firmware.enable {
+  #   nixos-modules.system.firmware = {
+  #     inherit (cfg.firmware) enable automatic-updates;
+  #   };
 
-      environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-    })
+  #   environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+  # })
 
-    (mkIf cfg.fonts.enable {
-      fonts = {
-        enableDefaultPackages = true;
-        inherit (cfg.fonts) packages;
-        fontconfig.defaultFonts = {inherit (cfg.fonts) defaults;};
-      };
-    })
+  #   (mkIf cfg.fonts.enable {
+  #     fonts = {
+  #       enableDefaultPackages = true;
+  #       inherit (cfg.fonts) packages;
+  #       fontconfig.defaultFonts = {inherit (cfg.fonts) defaults;};
+  #     };
+  #   })
 
-    (mkIf cfg.sysutils.enable {
-      nixos-modules.sysutils = {
-        inherit (cfg.sysutils) enable tools;
-      };
-    })
-  ]);
+  #   (mkIf cfg.sysutils.enable {
+  #     nixos-modules.sysutils = {
+  #       inherit (cfg.sysutils) enable tools;
+  #     };
+  #   })
+  # ]);
 }
