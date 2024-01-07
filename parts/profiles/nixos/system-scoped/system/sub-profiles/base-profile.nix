@@ -5,9 +5,8 @@
   ...
 }:
 with lib; let
-  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  cfg = config.profiles.system.preset.${filterfunc config.profiles.system.preset};
-
+  # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  # cfg = config.profiles.system.preset.${filterfunc config.profiles.system.preset};
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
