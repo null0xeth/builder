@@ -7,27 +7,32 @@
 with lib; let
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
-  cfg1 = config.profiles.networking.preset;
+  #cfg1 = config.profiles.networking.preset;
   #filter = filterAttrs (name: _: name.enable) base;
   #names = builtins.attrNames filter;
-
   #allPresets = builtins.mapAttrs (_: config: config.name) base;
   #activePresets = lib.filterAttrs (_: config: config.enable) allPresets;
   #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
   #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
-
-  filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: preset.${value}.enable) config.profiles.networking));
+  #filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: preset.${value}.enable) config.profiles.networking));
   #active = builtins.head (builtins.attrNames filter);
-
   #cfg = config.presets.${active};
-  cfg = config.profiles.networking.preset.${filter};
+  cfg = config.profiles.networking.preset;
 in {
   options.profiles.networking = {
     preset = mkOption {
       default = {};
-      type = types.attrsOf (types.submodule {
+      type = types.attrsOf (types.submodule ({
+        name,
+        config,
+        ...
+      }: {
         options = {
           enable = mkEnableOption "the default graphical networking template";
+          name = mkOption {
+            type = types.str;
+            default = name;
+          };
           hostName = mkOption {
             type = types.str;
             description = mdDoc "The hostname of the to-be configured system";
@@ -38,7 +43,13 @@ in {
             description = mdDoc "Extra hosts to add to /etc/hosts";
           };
         };
-      });
+
+        config = mkMerge [
+          {
+            name = mkDefault name;
+          }
+        ];
+      }));
     };
   };
 
