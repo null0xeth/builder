@@ -639,11 +639,6 @@ with lib; let
           };
         };
       };
-      config = mkMerge [
-        {
-         name = mkDefault name;
-        }
-      ];
     }));
   };
   config = mkIf cfg.enable (mkMerge [
