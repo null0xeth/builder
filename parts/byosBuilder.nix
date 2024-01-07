@@ -27,6 +27,7 @@ with lib; let
   ];
 
   options.presets = mkOption {
+    default = {};
     type = types.attrsOf (types.submodule ({name, config, ...}: {
       options = {
         enable = mkEnableOption "the preset builder";
@@ -36,24 +37,29 @@ with lib; let
           default = name;
         };
         builder = mkOption {
+          default = {};
           type = types.submodule {
             options = {
               networking = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
                     hostName = mkOption {
                       type = types.nullOr types.str;
                       description = mdDoc "The hostname of the to-be configured system";
+                      default = "honkmaster9000";
                     };
                     extraHosts = mkOption {
                       type = types.nullOr types.lines;
                       description = mdDoc "Extra hosts to add to /etc/hosts";
+                      default = "";
                     };
                   };
                 };
               };
               fromHardwareConfig = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
@@ -67,6 +73,7 @@ with lib; let
                       default = [];
                     };
                     initrd = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           availableKernelModules = mkOption {
@@ -96,6 +103,7 @@ with lib; let
               };
 
               hardware = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "the base hardware profile";
@@ -137,16 +145,20 @@ with lib; let
                     };
 
                     core = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "tba";
                           audio = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           bluetooth = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           storage = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                         };
@@ -154,19 +166,24 @@ with lib; let
                     };
 
                     optionals = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "tba";
                           thunderbolt = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           sensors = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           peripherals = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 logitech = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                               };
@@ -180,10 +197,12 @@ with lib; let
               };
 
               kernel = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
                     settings = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkOption {
@@ -202,12 +221,14 @@ with lib; let
                             default = [];
                           };
                           kernelParams = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 useDefaults = mkEnableOption "the default kernel parameters";
                                 customParams = mkOption {
                                   type = types.nullOr (types.listOf types.str);
                                   description = "Kernel parameters";
+                                  default = [];
 
                                 };
                               };
@@ -218,18 +239,23 @@ with lib; let
                     };
 
                     tweaks = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           networking = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           hardening = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           failsaves = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                           clean = mkOption {
+                            default = {};
                             type = enableModule;
                           };
                         };
@@ -237,12 +263,15 @@ with lib; let
                     };
 
                     boot = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           settings = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 general = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       silent = mkEnableOption "silence the console logs";
@@ -251,21 +280,23 @@ with lib; let
                                 };
 
                                 tmpfs = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       enable = mkEnableOption "the temporary filesystem";
                                       size = mkOption {
                                         type = types.nullOr types.str;
-                                        default = null;
                                       };
                                     };
                                   };
                                 };
 
                                 loader = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       efiSupport = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                       timeout = mkOption {
@@ -274,9 +305,11 @@ with lib; let
                                         description = mdDoc "the maximum allowed time in seconds to time out kernel operations";
                                       };
                                       copyToTmpfs = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                       systemd-boot = mkOption {
+                                        default = {};
                                         type = types.submodule {
                                           options = {
                                             enable = mkEnableOption "use systemd boot";
@@ -296,15 +329,19 @@ with lib; let
                           };
 
                           stages = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 stage1 = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       initrd = mkOption {
+                                        default = {};
                                         type = types.submodule {
                                           options = {
                                             systemd = mkOption {
+                                              default = {};
                                               type = enableModule; # enable systemd in the first stage of booting.
                                             };
                                             kernelModules = mkOption {
@@ -325,6 +362,7 @@ with lib; let
                                 };
 
                                 stage2 = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       kernelModules = mkOption {
@@ -346,6 +384,7 @@ with lib; let
               };
               # Checked and ok.
               graphical = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
@@ -359,37 +398,46 @@ with lib; let
                       default = "gtk";
                     };
                     settings = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           system = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 dbus = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                               };
                             };
                           };
                           xserver = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 enable = mkEnableOption "xserver";
                                 extra = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       exportConfiguration = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                       hyperlandSupport = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                     };
                                   };
                                 };
                                 libinput = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                                 desktopManager = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       enable = mkEnableOption "enable the desktopmanager module";
@@ -401,6 +449,7 @@ with lib; let
                                   };
                                 };
                                 displayManager = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       enable = mkEnableOption "enable the displaymanager module";
@@ -422,17 +471,21 @@ with lib; let
               };
 
               system = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
                     profile = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           firmware = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 enable = mkEnableOption "the firmware configuration module";
                                 automatic-updates = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       enable = mkEnableOption "enable automatic firmware updates";
@@ -452,6 +505,7 @@ with lib; let
                     };
 
                     fonts = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "the font configuration module";
@@ -488,22 +542,28 @@ with lib; let
                     };
 
                     sysutils = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           enable = mkEnableOption "the system utilities module";
                           tools = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 common = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                                 direnv = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                                 envfs = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                                 ld = mkOption {
+                                  default = {};
                                   type = enableModule;
                                 };
                               };
@@ -517,24 +577,30 @@ with lib; let
               };
 
               security = mkOption {
+                default = {};
                 type = types.submodule {
                   options = {
                     enable = mkEnableOption "tba";
                     modules = mkOption {
+                      default = {};
                       type = types.submodule {
                         options = {
                           agenix = mkOption {
+                            default = {};
                             type = enableModule;
                           };
 
                           yubikey = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 enable = mkEnableOption "support for yubikey mfa";
                                 settings = mkOption {
+                                  default = {};
                                   type = types.submodule {
                                     options = {
                                       configuration = mkOption {
+                                        default = {};
                                         type = types.submodule {
                                           options = {
                                             idVendor = mkOption {
@@ -551,9 +617,11 @@ with lib; let
                                         };
                                       };
                                       udev = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                       touchDetector = mkOption {
+                                        default = {};
                                         type = enableModule;
                                       };
                                     };
