@@ -67,7 +67,7 @@ in {
               storage.enable = false;
             };
             profile = {
-              enable = false;
+              enable = true;
               #cpu = {
               ##enable = false;
               # brand = "virtio";
