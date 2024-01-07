@@ -67,7 +67,7 @@ in {
     }
     (mkIf cfg.profile.enable {
       hardware-cpu-presets = {
-        "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th" = {
+        "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
           enable = true;
         };
       };
