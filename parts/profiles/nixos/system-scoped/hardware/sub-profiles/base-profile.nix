@@ -123,7 +123,7 @@ in {
     })
 
     (mkIf (!cfg.profile.enable) {
-      modules.hardware.cpu.${cfg.name} = {
+      modules.hardware.cpu = {
         enable = false;
         # name = "${cfg.name}";
         # settings = {
