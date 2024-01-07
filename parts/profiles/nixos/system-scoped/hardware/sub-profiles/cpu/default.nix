@@ -70,9 +70,9 @@ in {
     }
     (mkIf (cfg.profile.enable && (cfg.profile.cpu != null)) {
       hardware-cpu-presets = {
-        ${cfg.profile.cpu.brand} = {
-          ${cfg.profile.cpu.sub-type} = {
-            "${builtins.toString cfg.profile.cpu.generation}th" = {
+        ${cfg.profile.cpu.brand ? "none"} = {
+          ${cfg.profile.cpu.sub-type ? "none"} = {
+            ${builtins.toString (cfg.profile.cpu.generation ? "none") "th"} = {
               enable = true;
             };
           };
