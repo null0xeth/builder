@@ -11,7 +11,7 @@ in {
     enable = mkEnableOption "enable a pre-configured profile for intel 13th generation CPUs";
   };
   config = mkIf cfg.enable {
-    hardware-presets.cpu.intel.intel-desktop-13th = {
+    hardware-templates.cpu.intel.intel-desktop-13th = {
       enable = true;
       preset = {
         name = "intel-desktop-13th";

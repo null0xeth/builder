@@ -11,7 +11,7 @@ in {
     enable = mkEnableOption "enable a pre-configured profile for intel 12th generation CPUs";
   };
   config = mkIf cfg.enable {
-    hardware-presets.cpu.intel.intel-mobile-12th = {
+    hardware-templates.cpu.intel.intel-mobile-12th = {
       enable = true;
       name = "intel-mobile-12th";
       cpu = {

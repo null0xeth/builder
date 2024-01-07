@@ -11,7 +11,7 @@ in {
     enable = mkEnableOption "enable a pre-configured profile for intel 11th generation CPUs";
   };
   config = mkIf cfg.enable {
-    hardware-presets.cpu.intel.intel-desktop-11th = {
+    hardware-templates.cpu.intel.intel-desktop-11th = {
       enable = true;
       name = "intel-desktop-11th";
       cpu = {
