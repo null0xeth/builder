@@ -137,11 +137,12 @@ in {
   };
 
   config = let
-    name = builtins.head filterfunc;
-    cfg =
+    cfg = let
+      namez = builtins.head filterfunc;
+    in
       config.profiles.system.preset
       // {
-        preset = "${name}";
+        preset = "${namez}";
       };
   in
     mkIf (filterfunc != {}) (mkMerge [
