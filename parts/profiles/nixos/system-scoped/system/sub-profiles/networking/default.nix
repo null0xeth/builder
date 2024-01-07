@@ -17,7 +17,9 @@ with lib; let
   #filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: preset.${value}.enable) config.profiles.networking));
   #active = builtins.head (builtins.attrNames filter);
   #cfg = config.presets.${active};
-  cfg = config.profiles.networking.preset;
+  cfg1 = config.profiles.networking.preset;
+  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  cfg = config.profiles.networking.preset.${builtins.head (builtins.attrNames enabled)};
 in {
   options.profiles.networking = {
     preset = mkOption {
