@@ -7,7 +7,9 @@
 with lib; let
   cfg1 = config.profiles.system;
   profileNames = attrNames cfg1;
-  cfg = cfg1.${builtins.head profileNames};
+  cfg2 = config.profiles;
+
+  cfg = config.profiles.system.${cfg2.systemPool};
   # base = name: (builtins.hasAttr name config.profiles.system.preset);
   # filter = lib.filterAttrs (n: _: base n);
   # filterfunc = builtins.head (builtins.attrNames filter);
@@ -154,6 +156,11 @@ in {
   # in
 
   options = {
+    profiles.systemPool = mkOption {
+      type = types.nullOr types.str;
+      readOnly = true;
+    };
+
     profiles.system = mkOption {
       default = {};
       type = with types;
@@ -198,11 +205,16 @@ in {
             };
           };
           config = {
-            cfg.${name} =
+            cfg2 = {
+              systemPool = config.profileName;
+            };
+            cfg.${cfg2.systemPool} =
               {
                 enable = config.enable;
               }
-              // {inherit (config) profileName firmware fonts sysutils;};
+              // {
+                inherit (config) profileName firmware fonts sysutils;
+              };
           };
         }));
     };
