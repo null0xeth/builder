@@ -5,16 +5,16 @@
 }:
 with lib; let
   #inherit (lib) mkEnableOption mkOption mdDoc types mkIf mkMerge;
-  # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  # cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
+  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  cfg = config.profiles.hardware.preset.${filterfunc config.profiles.hardware.preset};
   # cfg1 = config.profiles.hardware.preset;
   # enabled = lib.filterAttrs (_: config: config.enable) cfg1;
   # names = builtins.attrNames enabled;
   # filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
   # active = builtins.head (builtins.attrNames filter);
   # cfg = config.profiles.hardware.preset.${active};
-  c = config.modules;
-  cfg = config.profiles.hardware.preset;
+  # c = config.modules;
+  #cfg = config.profiles.hardware.preset;
   # cfg1 = config.profiles.hardware.preset;
   # enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
   # cfg = config.profiles.hardware.preset.${builtins.head (builtins.attrNames enabled)};
@@ -114,95 +114,88 @@ in {
             };
           };
         };
-        config = mkMerge [
-          # {
-          #   name = mkDefault config.name;
-          # }
-          (mkIf config.enable (mkMerge [
-            (mkIf config.profile.enable {
-              modules.hardware.cpu = {
-                enable = true;
-                name = config.name;
-                inherit (config) profile;
-                # profile = {
-                #   #cpuType = config.profile.cpu.brand;
-                #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
-                #   inherit (config.profile.cpu) sub-type generation cpuType;
-                # };
-              };
-            })
-            (mkIf config.core.enable {
-              modules.hardware.core = {
-                enable = true;
-                settings = {
-                  audio.enable = config.core.audio.enable;
-                  bluetooth.enable = config.core.bluetooth.enable;
-                  storage.enable = config.core.storage.enable;
-                };
-              };
-            })
-
-            (mkIf config.optionals.enable {
-              modules.hardware.extras = {
-                enable = config.optionals.thunderbolt.enable || config.optionals.sensors.enable || config.optionals.peripherals.logitech.enable;
-                settings = {
-                  sensors.enable = true;
-                  thunderbolt.enable = true;
-                  logitech.enable = true;
-                };
-              };
-            })
-          ]))
-        ];
       }));
     };
   };
 
-  # config = mkIf cfg.enable (mkMerge [
-  #   (mkIf cfg.profile.enable {
-  #     modules.hardware.cpu = {
-  #       enable = true;
-  #       name = "${cfg.name}";
-  #       settings = {
-  #         cpuType = cfg.profile.cpu.brand;
-  #         generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
-  #         inherit (cfg.profile.cpu) sub-type;
-  #       };
-  #     };
-  #   })
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf config.profile.enable {
+      modules.hardware.cpu = {
+        enable = true;
+        name = config.name;
+        inherit (config) profile;
+        # profile = {
+        #   #cpuType = config.profile.cpu.brand;
+        #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
+        #   inherit (config.profile.cpu) sub-type generation cpuType;
+        # };
+      };
+    })
+    (mkIf config.core.enable {
+      modules.hardware.core = {
+        enable = true;
+        settings = {
+          audio.enable = config.core.audio.enable;
+          bluetooth.enable = config.core.bluetooth.enable;
+          storage.enable = config.core.storage.enable;
+        };
+      };
+    })
 
-  #   (mkIf (!cfg.profile.enable) {
-  #     modules.hardware.cpu = {
-  #       enable = false;
-  #       # name = "${cfg.name}";
-  #       # settings = {
-  #       #   cpuType = null;
-  #       #   generation = null;
-  #       #   sub-type = null;
-  #       # };
-  #     };
-  #   })
+    (mkIf config.optionals.enable {
+      modules.hardware.extras = {
+        enable = config.optionals.thunderbolt.enable || config.optionals.sensors.enable || config.optionals.peripherals.logitech.enable;
+        settings = {
+          sensors.enable = true;
+          thunderbolt.enable = true;
+          logitech.enable = true;
+        };
+      };
+    })
+    #   (mkIf cfg.profile.enable {
+    #     modules.hardware.cpu = {
+    #       enable = true;
+    #       name = "${cfg.name}";
+    #       settings = {
+    #         cpuType = cfg.profile.cpu.brand;
+    #         generation = mkIf (cfg.profile.cpu.brand == "intel" && cfg.profile.cpu.generation != null) cfg.profile.cpu.generation;
+    #         inherit (cfg.profile.cpu) sub-type;
+    #       };
+    #     };
+    #   })
 
-  #   (mkIf cfg.core.enable {
-  #     modules.hardware.core = {
-  #       enable = true;
-  #       settings = {
-  #         audio.enable = cfg.core.audio.enable;
-  #         bluetooth.enable = cfg.core.bluetooth.enable;
-  #         storage.enable = cfg.core.storage.enable;
-  #       };
-  #     };
-  #   })
+    #   (mkIf (!cfg.profile.enable) {
+    #     modules.hardware.cpu = {
+    #       enable = false;
+    #       # name = "${cfg.name}";
+    #       # settings = {
+    #       #   cpuType = null;
+    #       #   generation = null;
+    #       #   sub-type = null;
+    #       # };
+    #     };
+    #   })
 
-  #   (mkIf cfg.optionals.enable {
-  #     modules.hardware.extras = {
-  #       enable = cfg.optionals.thunderbolt.enable || cfg.optionals.sensors.enable || cfg.optionals.peripherals.logitech.enable;
-  #       settings = {
-  #         sensors.enable = true;
-  #         thunderbolt.enable = true;
-  #         logitech.enable = true;
-  #       };
-  #     };
-  #   })
-  # ]);
+    #   (mkIf cfg.core.enable {
+    #     modules.hardware.core = {
+    #       enable = true;
+    #       settings = {
+    #         audio.enable = cfg.core.audio.enable;
+    #         bluetooth.enable = cfg.core.bluetooth.enable;
+    #         storage.enable = cfg.core.storage.enable;
+    #       };
+    #     };
+    #   })
+
+    #   (mkIf cfg.optionals.enable {
+    #     modules.hardware.extras = {
+    #       enable = cfg.optionals.thunderbolt.enable || cfg.optionals.sensors.enable || cfg.optionals.peripherals.logitech.enable;
+    #       settings = {
+    #         sensors.enable = true;
+    #         thunderbolt.enable = true;
+    #         logitech.enable = true;
+    #       };
+    #     };
+    #   })
+  ]);
 }
