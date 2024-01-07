@@ -609,7 +609,7 @@ with lib; let
     (mkIf cfg.builder.hardware.enable {
       profiles.hardware.preset.${cfg.name} = {
         inherit (cfg.builder.hardware) enable name core optionals;
-        profile = { inherit (cfg.builder.hardware.profile) enable cpu;
+        profile = { inherit (cfg.builder.hardware.profile) enable cpu; };
 
       };
       # profiles.hardware.preset.${cfg.name} = {
