@@ -6,10 +6,10 @@
 }:
 with lib; let
   filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
-  cfg = config.hardware-presets.cpu.intel.${filterfunc config.hardware-presets.cpu.intel};
+  cfg = config.hardware-templates.cpu.intel.${filterfunc config.hardware-templates.cpu.intel};
   cpuSpecs = cfg.cpu;
 in {
-  options.hardware-presets.cpu.intel = mkOption {
+  options.hardware-templates.cpu.intel = mkOption {
     type = types.attrsOf (types.submodule {
       options = {
         enable = mkEnableOption "the base hardware profile";
