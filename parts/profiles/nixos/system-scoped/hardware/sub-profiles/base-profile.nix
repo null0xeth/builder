@@ -124,11 +124,11 @@ in {
         enable = cfg.profile.enable;
         name = cfg.name;
         profile = {
-          enable = cfg.builder.hardware.profile.enable;
+          enable = cfg.profile.enable;
           cpu = {
-            brand = cfg.builder.hardware.profile.cpu.brand;
-            generation = cfg.builder.hardware.profile.cpu.generation;
-            sub-type = cfg.builder.hardware.profile.cpu.sub-type;
+            brand = cfg.profile.cpu.brand;
+            generation = cfg.profile.cpu.generation;
+            sub-type = cfg.profile.cpu.sub-type;
           };
         };
       };
