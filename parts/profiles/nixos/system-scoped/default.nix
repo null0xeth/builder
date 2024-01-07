@@ -1,7 +1,7 @@
 {
   imports = [
-    #./kernel
-    #./system
+    ./kernel
+    ./system
     ./hardware #error zit hier
     ./security
     ./graphical
