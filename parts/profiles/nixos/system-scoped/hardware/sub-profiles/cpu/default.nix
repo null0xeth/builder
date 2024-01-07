@@ -9,7 +9,7 @@ with lib; let
   # allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
   # cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
   #slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
-  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.profile.enable) set));
+  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   cfg = config.modules.hardware.cpu.preset.${filterfunc config.modules.hardware.cpu.preset};
 in {
   imports = [./submodules];
