@@ -65,15 +65,13 @@ in {
         }
       ];
     }
-    (mkIf cfg.profile.enable (let
-      slug = "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th";
-    in {
+    (mkIf cfg.profile.enable {
       hardware-cpu-presets = {
-        "${slug}" = {
+        "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th" = {
           enable = true;
         };
       };
-    }))
+    })
 
     # hardware-cpu-presets = let
     #   slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
