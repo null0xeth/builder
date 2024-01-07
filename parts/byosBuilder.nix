@@ -605,6 +605,15 @@ with lib; let
             };
           };
         })
+        // (optionalAttrs (!cfg.builder.hardware.cpu.enable) {
+          profile = {
+            enable = false;
+            # cpu = {
+            #   inherit (cfg.builder.hardware.cpu) brand generation sub-type;
+            # };
+          };
+        })
+
           // (optionalAttrs cfg.builder.hardware.basics.enable {
           core = {
             enable = true;
