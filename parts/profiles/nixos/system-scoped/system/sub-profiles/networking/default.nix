@@ -18,8 +18,8 @@ with lib; let
 
   #filter = lib.filterAttrs (name: _: builtins.elem name base);
   #active = builtins.head (builtins.attrNames filter);
-  filter = builtins.attrNames (lib.filterAttrs (n: v: n.enable) cfg1);
-  active = last filter;
+  filter = builtins.attrValues cfg1;
+  active = builtins.head filter;
   #cfg = config.presets.${active};
   cfg = config.profiles.networking.preset.${active};
 in {
