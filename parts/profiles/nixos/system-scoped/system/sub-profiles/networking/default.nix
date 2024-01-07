@@ -8,7 +8,7 @@ with lib; let
   # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   # cfg = config.profiles.networking.preset.${filterfunc config.profiles.networking.preset};
   base = config.profiles.networking.preset;
-  filter = lib.filterAttrs (name: _: name.enable) base;
+  filter = filterAttrs (name: _: name.enable) base;
   names = builtins.attrNames filter;
 
   #allPresets = builtins.mapAttrs (_: config: config.name) base;
