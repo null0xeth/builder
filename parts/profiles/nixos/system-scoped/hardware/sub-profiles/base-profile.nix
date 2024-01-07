@@ -123,12 +123,14 @@ in {
       modules.hardware.cpu.preset.${cfg.name} = {
         enable = cfg.profile.enable;
         name = cfg.name;
-        inherit (cfg) profile;
-        # profile = {
-        #   #cpuType = config.profile.cpu.brand;
-        #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
-        #   inherit (config.profile.cpu) sub-type generation cpuType;
-        # };
+        profile = {
+          enable = cfg.builder.hardware.profile.enable;
+          cpu = {
+            brand = cfg.builder.hardware.profile.cpu.brand;
+            generation = cfg.builder.hardware.profile.cpu.generation;
+            sub-type = cfg.builder.hardware.profile.cpu.sub-type;
+          };
+        };
       };
     }
     (mkIf cfg.core.enable {

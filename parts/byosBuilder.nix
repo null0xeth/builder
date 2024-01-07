@@ -605,9 +605,27 @@ with lib; let
     # HW:
     (mkIf cfg.builder.hardware.enable {
       profiles.hardware.preset.${cfg.name} = {
-        inherit (cfg.builder.hardware) enable name core optionals;
-        profile = { inherit (cfg.builder.hardware.profile) enable cpu; };
-
+        enable = true;
+        name = cfg.name;
+        profile = {
+          enable = cfg.builder.hardware.profile.enable;
+          cpu = {
+            brand = cfg.builder.hardware.profile.cpu.brand;
+            generation = cfg.builder.hardware.profile.cpu.generation;
+            sub-type = cfg.builder.hardware.profile.cpu.sub-type;
+          };
+        };
+        core = {
+          enable = cfg.builder.hardware.core.enable;
+          audio.enable = cfg.builder.hardware.core.audio.enable;
+          bluetooth.enable = cfg.builder.hardware.core.bluetooth.enable;
+          storage.enable = cfg.builder.hardware.core.storage.enable;
+        };
+        optionals = {
+          thunderbolt.enable = cfg.builder.hardware.optionals.thunderbolt.enable;
+          sensors.enable = cfg.builder.hardware.optionals.sensors.enable;
+          peripherals.logitech.enable = cfg.builder.hardware.core.optionals.peripherals.logitech.enable;
+        };
       };
       # profiles.hardware.preset.${cfg.name} = {
       #   enable = true;
