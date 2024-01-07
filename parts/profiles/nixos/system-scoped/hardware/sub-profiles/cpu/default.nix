@@ -67,7 +67,7 @@ in {
     }
     (mkIf (cfg.profile.enable && (cfg.profile.cpu.brand != null) && (cfg.profile.cpu.generation != null) && (cfg.profile.cpu.sub-type != null))
       (let
-        slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+        slug = "${cfg.profile.brand}-${cfg.profile.sub-type}-${builtins.toString cfg.profile.generation}th";
       in {
         hardware-cpu-presets.${slug}.enable = true;
       }))
