@@ -120,7 +120,7 @@ in {
           }
           (mkIf config.enable (mkMerge [
             (mkIf config.profile.enable {
-              c.hardware.cpu = {
+              modules.hardware.cpu = {
                 enable = true;
                 name = name;
                 settings = {
