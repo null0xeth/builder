@@ -160,7 +160,7 @@ in {
         fonts = {
           enableDefaultPackages = true;
           inherit (cfg.${filterfunc}.fonts) packages;
-          fontconfig.defaultFonts = cfg.${filterfunc}.fonts.default;
+          fontconfig.defaultFonts = cfg.${filterfunc}.fonts.defaults;
         };
       })
 
