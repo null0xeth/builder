@@ -84,7 +84,7 @@ in {
           };
 
           kernel = {
-            enable = false;
+            enable = true;
             settings = {
               useLatest = true;
               kernelParams = {
