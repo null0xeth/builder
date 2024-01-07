@@ -38,8 +38,12 @@ in {
                   type = types.submodule {
                     options = {
                       enable = mkEnableOption "the firmware configuration module";
-                      automatic-updates = {
-                        enable = mkEnableOption "enable automatic firmware updates";
+                      automatic-updates = mkOption {
+                        type = types.submodule {
+                          options = {
+                            enable = mkEnableOption "enable automatic firmware updates";
+                          };
+                        };
                       };
                       # packages = mkOption {
                       #   type = with types; listOf package;
