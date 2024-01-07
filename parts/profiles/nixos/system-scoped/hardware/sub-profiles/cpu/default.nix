@@ -16,7 +16,11 @@ in {
   options.modules.hardware.cpu = {
     preset = mkOption {
       default = {};
-      type = types.attrsOf (types.submodule ({name, ...}: {
+      type = types.attrsOf (types.submodule ({
+        name,
+        config,
+        ...
+      }: {
         options = {
           enable = mkEnableOption "the base hardware profile";
           name = mkOption {
