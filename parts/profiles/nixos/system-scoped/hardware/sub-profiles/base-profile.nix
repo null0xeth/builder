@@ -123,16 +123,12 @@ in {
               modules.hardware.cpu = {
                 enable = true;
                 name = name;
-                settings = {
-                  cpuType = config.profile.cpu.brand;
-                  generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
-                  inherit (config.profile.cpu) sub-type;
-                };
-              };
-            })
-            (mkIf (!config.profile.enable) {
-              modules.hardware.cpu = {
-                enable = false;
+                inherit (config) profile;
+                # profile = {
+                #   #cpuType = config.profile.cpu.brand;
+                #   #generation = mkIf (config.profile.cpu.brand == "intel" && config.profile.cpu.generation != null) config.profile.cpu.generation;
+                #   inherit (config.profile.cpu) sub-type generation cpuType;
+                # };
               };
             })
             (mkIf config.core.enable {
