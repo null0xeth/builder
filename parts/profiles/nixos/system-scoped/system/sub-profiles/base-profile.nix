@@ -22,6 +22,7 @@ in {
 
   options.profiles.system = {
     preset = mkOption {
+      default = {};
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the default system profile template";
@@ -31,13 +32,16 @@ in {
             default = "default-hardware-template";
           };
           profile = mkOption {
+            default = {};
             type = types.submodule {
               options = {
                 firmware = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       enable = mkEnableOption "the firmware configuration module";
                       automatic-updates = mkOption {
+                        default = {};
                         type = types.submodule {
                           options = {
                             enable = mkEnableOption "enable automatic firmware updates";
@@ -56,6 +60,7 @@ in {
             };
           };
           fonts = mkOption {
+            default = {};
             type = types.submodule {
               options = {
                 enable = mkEnableOption "the font configuration module";
@@ -92,22 +97,28 @@ in {
           };
 
           sysutils = mkOption {
+            default = {};
             type = types.submodule {
               options = {
                 enable = mkEnableOption "the system utilities module";
                 tools = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       common = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                       direnv = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                       envfs = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                       ld = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                     };
