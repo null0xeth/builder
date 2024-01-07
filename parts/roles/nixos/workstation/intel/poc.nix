@@ -60,19 +60,21 @@ in {
 
           hardware = {
             enable = true;
-            basics = {
+            core = {
               enable = false;
               audio.enable = false;
               bluetooth.enable = false;
               storage.enable = false;
             };
-            cpu = {
+            profile = {
               enable = false;
+              # cpu = {
+              # enable = false;
               # brand = "virtio";
               # generation = 12;
               # sub-type = "virtual";
             };
-            functionality = {
+            optionals = {
               enable = false;
               thunderbolt.enable = false;
               sensors.enable = false;
