@@ -12,6 +12,7 @@ with lib; let
 in {
   imports = [./submodules];
   options.modules.hardware.cpu = mkOption {
+    default = {};
     type = types.submodule {
       options = {
         enable = mkEnableOption "enable the default CPU profile";
@@ -24,13 +25,14 @@ in {
             options = {
               cpuType = mkOption {
                 #type = types.nullOr (types.enum ["intel" "amd"]);
-                #default = "intel";
+                default = "intel";
                 type = types.str;
                 description = "Please select the type of CPU you have (intel/amd)";
               };
               generation = mkOption {
                 # cpu generation
                 #type = types.nullOr types.int;
+                default = 12;
                 type = types.int;
                 description = "Specify the CPU generation you have (intel only)";
               };
@@ -38,7 +40,7 @@ in {
                 #type = types.nullOr (types.enum ["mobile" "desktop"]);
                 type = types.str;
                 description = mdDoc "The type of CPU installed [desktop|mobile]";
-                #default = "mobile";
+                default = "mobile";
               };
             };
           };
