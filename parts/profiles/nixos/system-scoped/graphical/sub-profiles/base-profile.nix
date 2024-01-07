@@ -17,6 +17,7 @@
 in {
   options.profiles.graphical = {
     preset = mkOption {
+      default = {};
       type = types.attrsOf (types.submodule {
         options = {
           enable = mkEnableOption "the default graphical profile template";
@@ -32,22 +33,27 @@ in {
           };
 
           settings = mkOption {
+            default = {};
             type = types.submodule {
               options = {
                 system = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       dbus = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                     };
                   };
                 };
                 xserver = mkOption {
+                  default = {};
                   type = types.submodule {
                     options = {
                       enable = mkEnableOption "tba";
                       desktopManager = mkOption {
+                        default = {};
                         type = types.submodule {
                           options = {
                             enable = mkEnableOption "enable the desktopmanager module";
@@ -59,6 +65,7 @@ in {
                         };
                       };
                       displayManager = mkOption {
+                        default = {};
                         type = types.submodule {
                           options = {
                             enable = mkEnableOption "enable the displaymanager module";
@@ -70,15 +77,19 @@ in {
                         };
                       };
                       libinput = mkOption {
+                        default = {};
                         type = enableModule;
                       };
                       extra = mkOption {
+                        default = {};
                         type = types.submodule {
                           options = {
                             hyperlandSupport = mkOption {
+                              default = {};
                               type = enableModule;
                             };
                             exportConfiguration = mkOption {
+                              default = {};
                               type = enableModule;
                             };
                           };
