@@ -13,7 +13,11 @@ in {
   imports = [./submodules];
   options.modules.hardware.cpu = mkOption {
     default = {};
-    type = types.submodule {
+    type = types.submodule ({
+      config,
+      name,
+      ...
+    }: {
       options = {
         enable = mkEnableOption "the base hardware profile";
         name = mkOption {
@@ -50,7 +54,7 @@ in {
           };
         };
       };
-    };
+    });
   };
   config = mkIf cfg.enable (mkMerge [
     {
