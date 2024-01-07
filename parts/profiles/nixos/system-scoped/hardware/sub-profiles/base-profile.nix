@@ -115,9 +115,9 @@ in {
           };
         };
         config = mkMerge [
-          {
-            name = mkDefault config.name;
-          }
+          # {
+          #   name = mkDefault config.name;
+          # }
           (mkIf config.enable (mkMerge [
             (mkIf config.profile.enable {
               modules.hardware.cpu = {
