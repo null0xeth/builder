@@ -119,8 +119,8 @@ with lib; let
       {
         fonts = {
           enableDefaultPackages = true;
-          inherit (config.fonts) packages;
-          fontconfig.defaultFonts = {inherit (config.fonts) defaults;};
+          inherit (config) packages;
+          fontconfig.defaultFonts = {inherit (config) defaults;};
         };
       }
     ]);
@@ -163,7 +163,7 @@ with lib; let
     config = mkIf config.enable (mkMerge [
       {
         nixos-modules.sysutils = {
-          inherit (config.sysutils) enable tools;
+          inherit (config) enable tools;
         };
       }
     ]);
