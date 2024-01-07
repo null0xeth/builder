@@ -66,11 +66,11 @@ in {
       ];
     }
     (mkIf (cfg.profile.enable && (cfg.profile.cpu != null)) {
-      hardware-cpu-presets = {
-        "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
-          enable = true;
-        };
-      };
+      # hardware-cpu-presets = {
+      #   "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
+      #     enable = true;
+      #   };
+      # };
     })
 
     # hardware-cpu-presets = let
