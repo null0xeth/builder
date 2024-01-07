@@ -41,7 +41,7 @@ in {
           name = mkOption {
             type = types.str;
             description = mdDoc "The slug used to refer to this profile";
-            default = "${name}";
+            default = name;
           };
           profile = mkOption {
             type = types.submodule {
