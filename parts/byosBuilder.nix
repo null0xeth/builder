@@ -11,8 +11,8 @@ with lib; let
   # cfg = config.presets."${builtins.head names}";
   
   filter = lib.filterAttrs (name: _: name.enable) cfg1;
-  active = builtins.head (builtins.attrNames filter); 
-  cfg = config.presets."${active}";
+  active = builtins.attrNames filter; 
+  cfg = config.presets.${active};
 
   enableModule = lib.types.submodule {
     options = {
