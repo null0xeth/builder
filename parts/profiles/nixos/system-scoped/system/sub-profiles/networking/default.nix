@@ -16,12 +16,11 @@ with lib; let
   #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
   #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
 
-  #filter = lib.filterAttrs (name: _: builtins.elem name base);
+  filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: cfg1.${name}.enable) cfg1));
   #active = builtins.head (builtins.attrNames filter);
-  filter = builtins.attrValues cfg1;
-  active = builtins.head filter;
+
   #cfg = config.presets.${active};
-  cfg = config.profiles.networking.preset.${active};
+  cfg = config.profiles.networking.preset.${filter};
 in {
   options.profiles.networking = {
     preset = mkOption {
