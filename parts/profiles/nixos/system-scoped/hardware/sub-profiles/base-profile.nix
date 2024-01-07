@@ -13,7 +13,8 @@ with lib; let
   names = builtins.attrNames enabled;
 
   filter = lib.filterAttrs (name: _: builtins.elem name cfg1);
-  cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames filter)}";
+  active = builtins.head (builtins.attrNames filter);
+  cfg = config.profiles.hardware.preset.${active};
 
   enableModule = lib.types.submodule {
     options = {

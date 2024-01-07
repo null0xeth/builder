@@ -10,8 +10,9 @@ with lib; let
   # names = builtins.attrValues (builtins.mapAttrs (_: config: config.name) enabled);
   # cfg = config.presets."${builtins.head names}";
   
-   filter = lib.filterAttrs (name: _: builtins.elem name cfg1);
-  cfg = config.profiles.hardware.preset."${builtins.head (builtins.attrNames filter)}";
+  filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
+  active = builtins.head (builtins.attrNames filter); 
+  cfg = config.profiles.hardware.preset.${active};
 
   enableModule = lib.types.submodule {
     options = {
