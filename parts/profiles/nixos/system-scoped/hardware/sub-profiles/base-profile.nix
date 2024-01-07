@@ -49,25 +49,14 @@ in {
                         #default = null;
                       };
                       generation = mkOption {
-                        type = types.int;
+                        type = types.nullOr types.int;
                         description = mdDoc "The generation of your CPU (intel only)";
                         #default = null;
                       };
                       sub-type = mkOption {
-                        type = types.str;
+                        type = types.nullOr types.str;
                         description = mdDoc "The type of CPU installed [desktop|mobile]";
                         #default = null;
-                      };
-                    };
-                  };
-                };
-                gpu = mkOption {
-                  type = types.submodule {
-                    options = {
-                      type = mkOption {
-                        type = types.enum ["cpu" "dedicated" "none"];
-                        description = mdDoc "The type of GPU you have [cpu | dedicated | none]";
-                        default = "cpu";
                       };
                     };
                   };

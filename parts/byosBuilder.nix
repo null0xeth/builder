@@ -95,14 +95,45 @@ with lib; let
               hardware = mkOption {
                 type = types.submodule {
                   options = {
-                    enable = mkEnableOption "tba";
-                    basics = mkOption {
+                    enable = mkEnableOption "the base hardware profile";
+                    name = mkOption {
+                      type = types.str;
+                      description = mdDoc "The slug used to refer to this profile";
+                      default = "default-hardware-template";
+                    };
+                    profile = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = false;
+                          enable = mkEnableOption "lol";
+                          cpu = mkOption {
+                            type = types.submodule {
+                              options = {
+                                brand = mkOption {
+                                  type = types.nullOr types.str;
+                                  description = mdDoc "The manufacturer of your CPU";
+                                  #default = null;
+                                };
+                                generation = mkOption {
+                                  type = types.nullOr types.int;
+                                  description = mdDoc "The generation of your CPU (intel only)";
+                                  #default = null;
+                                };
+                                sub-type = mkOption {
+                                  type = types.nullOr types.str;
+                                  description = mdDoc "The type of CPU installed [desktop|mobile]";
+                                  #default = null;
+                                };
+                              };
+                            };
                           };
+                        };
+                      };
+                    };
+
+                    core = mkOption {
+                      type = types.submodule {
+                        options = {
+                          enable = mkEnableOption "tba";
                           audio = mkOption {
                             type = enableModule;
                           };
@@ -111,55 +142,29 @@ with lib; let
                           };
                           storage = mkOption {
                             type = enableModule;
-                            # TODO: more details related to ssd
                           };
                         };
                       };
                     };
-                    cpu = mkOption {
+
+                    optionals = mkOption {
                       type = types.submodule {
                         options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = false;
-                          };
-                          brand = mkOption {
-                            type = types.nullOr (types.enum ["intel" "amd" "virtio"]);
-                            #default = "intel";
-                            description = "Please select the type of CPU you have (intel/amd)";
-                          };
-
-                          generation = mkOption {
-                            # cpu generation
-                            type = types.nullOr types.int;
-                            #default = 12;
-                            description = "Specify the CPU generation you have (intel only)";
-                          };
-                          sub-type = mkOption {
-                            type = types.nullOr (types.enum ["mobile" "desktop" "virtual"]);
-                            description = mdDoc "The type of CPU installed [desktop|mobile|virtual]";
-                            #default = "mobile";
-                          };
-                          #useForGraphics = mkEnableOption "use the integrated graphics of the CPU";
-                        };
-                      };
-                    };
-
-                    functionality = mkOption {
-                      type = types.submodule {
-                        options = {
-                          enable = mkOption {
-                            type = types.bool;
-                            default = false;
-                          };
+                          enable = mkEnableOption "tba";
                           thunderbolt = mkOption {
                             type = enableModule;
                           };
                           sensors = mkOption {
                             type = enableModule;
                           };
-                          logitech = mkOption {
-                            type = enableModule;
+                          peripherals = mkOption {
+                            type = types.submodule {
+                              options = {
+                                logitech = mkOption {
+                                  type = enableModule;
+                                };
+                              };
+                            };
                           };
                         };
                       };
@@ -591,45 +596,25 @@ with lib; let
     })
 
     # HW:
-    (mkIf cfg.builder.hardware.enable (mkMerge [
-      {
-        profiles.hardware.preset.${cfg.name} = {
-          enable = true;
-          name = "${cfg.name}";
-        }
-        // (optionalAttrs cfg.builder.hardware.cpu.enable {
-          profile = {
-            enable = true;
-            cpu = {
-              inherit (cfg.builder.hardware.cpu) brand generation sub-type;
-            };
-          };
-        })
-        // (optionalAttrs (!cfg.builder.hardware.cpu.enable) {
-          profile = {
-            enable = false;
-            # cpu = {
-            #   inherit (cfg.builder.hardware.cpu) brand generation sub-type;
-            # };
-          };
-        })
-
-          // (optionalAttrs cfg.builder.hardware.basics.enable {
-          core = {
-            enable = true;
-            inherit (cfg.builder.hardware.basics) audio bluetooth storage;
-          };
-        }) // (optionalAttrs cfg.builder.hardware.functionality.enable {
-          optionals = {
-            enable = true;
-            inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
-            peripherals.logitech = {
-              inherit (cfg.builder.hardware.functionality.logitech) enable;
-            };
-          };
-        });
-      }
-    ]))
+    (mkIf cfg.builder.hardware.enable {
+      profiles.hardware.preset.${cfg.name} = {} // cfg.builder.hardware;
+      # profiles.hardware.preset.${cfg.name} = {
+      #   enable = true;
+      #   name = "${cfg.name}";
+      #   profile = {
+      #     inherit (cfg.builder.hardware) cpu;
+      #   };
+      #   core = {
+      #     inherit (cfg.builder.hardware.basics) audio bluetooth storage;
+      #   };
+      #   optionals = {
+      #     inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
+      #     peripherals.logitech = {
+      #       inherit (cfg.builder.hardware.functionality.logitech) enable;
+      #     };
+      #   };
+      # };
+    })
 
     # Kernel:
     (mkIf cfg.builder.kernel.enable {

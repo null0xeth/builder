@@ -59,25 +59,25 @@ in {
           };
 
           hardware = {
-            enable = false;
-            # basics = {
-            #   enable = false;
-            #   # audio.enable = false;
-            #   # bluetooth.enable = false;
-            #   # storage.enable = false;
-            # };
-            # cpu = {
-            #   enable = false;
-            #   # brand = "virtio";
-            #   # generation = 12;
-            #   # sub-type = "virtual";
-            # };
-            # functionality = {
-            #   enable = false;
-            #   # thunderbolt.enable = false;
-            #   # sensors.enable = false;
-            #   # logitech.enable = false;
-            # };
+            enable = true;
+            basics = {
+              enable = false;
+              audio.enable = false;
+              bluetooth.enable = false;
+              storage.enable = false;
+            };
+            cpu = {
+              enable = false;
+              # brand = "virtio";
+              # generation = 12;
+              # sub-type = "virtual";
+            };
+            functionality = {
+              enable = false;
+              thunderbolt.enable = false;
+              sensors.enable = false;
+              logitech.enable = false;
+            };
           };
 
           kernel = {
