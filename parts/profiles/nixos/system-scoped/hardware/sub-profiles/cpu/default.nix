@@ -5,10 +5,12 @@
 }:
 with lib; let
   #inherit (lib) mkEnableOption mkOption types mkIf mdDoc;
-  cfg1 = config.modules.hardware.cpu;
-  allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
-  cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
+  # cfg1 = config.modules.hardware.cpu;
+  # allPresets = builtins.mapAttrs (_: config: config.name) cfg1;
+  # cfg = cfg1."${builtins.head (builtins.attrNames allPresets)}";
   #slug = "${cfg.settings.cpuType}-${cfg.settings.sub-type}-${builtins.toString cfg.settings.generation}th";
+  filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
+  cfg = config.modules.hardware.cpu.${filterfunc config.profiles.hardware.preset};
 in {
   imports = [./submodules];
   options.modules.hardware.cpu = mkOption {
