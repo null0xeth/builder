@@ -163,15 +163,15 @@ in {
           };
 
           system = {
-            enable = false;
-            # profile = {
-            #   firmware = {
-            #     enable = true;
-            #     automatic-updates = {
-            #       enable = true;
-            #     };
-            #   };
-            # };
+            enable = true;
+            profile = {
+              firmware = {
+                enable = true;
+                automatic-updates = {
+                  enable = true;
+                };
+              };
+            };
             fonts = {
               enable = false;
               # packages = with pkgs; [
@@ -198,13 +198,13 @@ in {
               # };
             };
             sysutils = {
-              enable = false;
-              # tools = {
-              #   common.enable = true;
-              #   direnv.enable = true;
-              #   envfs.enable = true;
-              #   ld.enable = true; # no point
-              # };
+              enable = true;
+              tools = {
+                common.enable = true;
+                direnv.enable = true;
+                envfs.enable = true;
+                ld.enable = true; # no point
+              };
             };
           };
 
