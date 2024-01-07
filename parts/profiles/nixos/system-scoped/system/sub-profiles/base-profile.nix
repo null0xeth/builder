@@ -136,27 +136,29 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && (cfg.preset != {})) (mkMerge [
-    (mkIf cfg.profile.firmware.enable {
-      nixos-modules.system.firmware = {
-        inherit (cfg.profile.firmware) enable automatic-updates;
-      };
+  config = mkMerge [
+    (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
+      (mkIf cfg.profile.firmware.enable {
+        nixos-modules.system.firmware = {
+          inherit (cfg.profile.firmware) enable automatic-updates;
+        };
 
-      environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-    })
+        environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+      })
 
-    (mkIf cfg.fonts.enable {
-      fonts = {
-        enableDefaultPackages = true;
-        inherit (cfg.fonts) packages;
-        fontconfig.defaultFonts = cfg.fonts.defaults;
-      };
-    })
+      (mkIf cfg.fonts.enable {
+        fonts = {
+          enableDefaultPackages = true;
+          inherit (cfg.fonts) packages;
+          fontconfig.defaultFonts = cfg.fonts.defaults;
+        };
+      })
 
-    (mkIf cfg.sysutils.enable {
-      nixos-modules.sysutils = {
-        inherit (cfg.sysutils) enable tools;
-      };
-    })
-  ]);
+      (mkIf cfg.sysutils.enable {
+        nixos-modules.sysutils = {
+          inherit (cfg.sysutils) enable tools;
+        };
+      })
+    ]))
+  ];
 }
