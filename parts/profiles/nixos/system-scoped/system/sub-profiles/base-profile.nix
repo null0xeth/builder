@@ -5,8 +5,8 @@
   ...
 }:
 with lib; let
-  filter = lib.filterAttrs (n: _: (builtins.hasAttr n config.profiles.system.preset) && config.profiles.system.preset.${n}.enable);
-  filterv2 = lib.filterAttrs (name: _: (builtins.elem name filter));
+  base = name: builtins.hasAttr (name config.profiles.system.preset);
+  filter = lib.filterAttrs (n: _: base n);
   filterfunc = builtins.head (builtins.attrNames filter);
   cfg = config.profiles.system.preset."${filterfunc}";
 
