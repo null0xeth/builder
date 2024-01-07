@@ -99,7 +99,7 @@ with lib; let
                     name = mkOption {
                       type = types.str;
                       description = mdDoc "The slug used to refer to this profile";
-                      default = "default-hardware-template";
+                      default = "${cfg.name}";
                     };
                     profile = mkOption {
                       type = types.submodule {
