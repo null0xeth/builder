@@ -110,6 +110,7 @@ with lib; let
                         options = {
                           enable = mkEnableOption "lol";
                           cpu = mkOption {
+                            default = {};
                             type = types.submodule {
                               options = {
                                 brand = mkOption {
