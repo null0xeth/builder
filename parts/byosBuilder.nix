@@ -586,18 +586,18 @@ with lib; let
              ];
     }
     # Networking:
-    (mkIf cfg.builder.networking.enable (mkMerge [
-      {
-        profiles.networking.preset.${cfg.name} = {
-          enable = true;
-        }// (optionalAttrs (cfg.builder.networking.hostName != null) {
-        inherit (cfg.builder.networking) hostName;
-      }) // (optionalAttrs (cfg.builder.networking.extraHosts != null) {
-        inherit (cfg.builder.networking) extraHosts;
-      });
+    #(mkIf cfg.builder.networking.enable (mkMerge [
+    #   {
+    #     profiles.networking.preset.${cfg.name} = {
+    #       enable = true;
+    #     }// (optionalAttrs (cfg.builder.networking.hostName != null) {
+    #     inherit (cfg.builder.networking) hostName;
+    #   }) // (optionalAttrs (cfg.builder.networking.extraHosts != null) {
+    #     inherit (cfg.builder.networking) extraHosts;
+    #   });
 
-      }
-    ]))
+    #   }
+    # ]))
 
     # FS:
     (mkIf cfg.builder.fromHardwareConfig.enable {
