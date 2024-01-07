@@ -13,24 +13,8 @@ with lib; let
       enable = mkEnableOption "";
     };
   };
-  nestedEnableModule = subName:
-    lib.types.submodule {
-      options = {
-        ${subName} = mkOption {
-          type = lib.types.submodule {
-            options = {
-              enable = mkEnableOption "";
-            };
-          };
-        };
-      };
-    };
 
-  profileTemplate = {
-    name,
-    config,
-    ...
-  }: {
+  profileTemplate = {name, ...}: {
     options = {
       name = mkOption {
         type = types.str;
@@ -124,7 +108,18 @@ with lib; let
             enable = mkEnableOption "blabla";
             general = mkOption {
               default = {};
-              type = nestedEnableModule "silent";
+              type = types.submodule {
+                options = {
+                  silent = mkOption {
+                    default = {};
+                    type = types.submodule {
+                      options = {
+                        enable = mkEnableOption "tbalol";
+                      };
+                    };
+                  };
+                };
+              };
             };
             tmpfs = mkOption {
               default = {};
@@ -184,7 +179,14 @@ with lib; let
 
       optionals = mkOption {
         default = {};
-        type = nestedEnableModule "ricemyttydotcom";
+        type = types.submodule {
+          options = {
+            ricemyttydotcom = mkOption {
+              default = {};
+              type = enableModule;
+            };
+          };
+        };
       };
     };
   };
@@ -193,8 +195,8 @@ in {
 
   options.profiles.kernel = {
     preset = mkOption {
-      type = types.attrsOf (types.submodule profileTemplate);
       default = {};
+      type = types.attrsOf (types.submodule profileTemplate);
     };
   };
 
