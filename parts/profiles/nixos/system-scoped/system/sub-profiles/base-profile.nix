@@ -5,16 +5,18 @@
   ...
 }:
 with lib; let
-  cfg1 = config.profiles.system;
-  profileNames = attrNames cfg1;
-  cfg2 = config.profiles;
-
-  cfg = config.profiles.system.${cfg2.systemPool};
+  # cfg1 = config.profiles.system;
+  # profileNames = attrNames cfg1;
+  # cfg = cfg1.${builtins.head profileNames};
+  # cfg2 = config.profiles;
   # base = name: (builtins.hasAttr name config.profiles.system.preset);
   # filter = lib.filterAttrs (n: _: base n);
   # filterfunc = builtins.head (builtins.attrNames filter);
   # cfg2 = config.profiles.system.preset."${filterfunc}";
   # cfg = config.profiles.system.preset;
+  cfg1 = config.profiles.system;
+  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  cfg = config.profiles.system.${builtins.head (builtins.attrNames enabled)};
 
   enableModule = lib.types.submodule {
     options = {
@@ -205,10 +207,7 @@ in {
             };
           };
           config = {
-            cfg2 = {
-              systemPool = config.profileName;
-            };
-            cfg.${cfg2.systemPool} =
+            cfg.${name} =
               {
                 enable = config.enable;
               }
