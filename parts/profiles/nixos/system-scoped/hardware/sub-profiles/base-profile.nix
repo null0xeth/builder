@@ -122,7 +122,7 @@ in {
             (mkIf config.profile.enable {
               modules.hardware.cpu = {
                 enable = true;
-                name = name;
+                name = config.name;
                 inherit (config) profile;
                 # profile = {
                 #   #cpuType = config.profile.cpu.brand;
