@@ -467,7 +467,10 @@ with lib; let
                 default = {};
                 type = types.submodule {
                   options = {
-                    enable = mkEnableOption "tba";
+                    enable = mkOption {
+                      type = types.bool;
+                      default = false;
+                    };
                     profile = mkOption {
                       default = {};
                       type = types.submodule {
@@ -501,7 +504,10 @@ with lib; let
                       default = {};
                       type = types.submodule {
                         options = {
-                          enable = mkEnableOption "the font configuration module";
+                          enable = mkOption {
+                      type = types.bool;
+                      default = false;
+                    };
                           packages = mkOption {
                             type = with types; listOf package;
                             description = mdDoc "Font packages to install";
