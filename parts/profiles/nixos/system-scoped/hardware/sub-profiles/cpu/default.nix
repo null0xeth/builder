@@ -64,7 +64,7 @@ in {
     {
       assertions = [
         {
-          assertion = cfg.settings.generation != 0;
+          assertion = cfg.profile.cpu.generation != 0;
           message = "Please specify the processor generation. It cannot be omitted";
         }
       ];
