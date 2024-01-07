@@ -119,9 +119,9 @@ in {
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf cfg.profile.enable {
+    {
       modules.hardware.cpu.preset.${cfg.name} = {
-        enable = true;
+        enable = cfg.profile.enable;
         name = cfg.name;
         inherit (cfg) profile;
         # profile = {
@@ -130,7 +130,7 @@ in {
         #   inherit (config.profile.cpu) sub-type generation cpuType;
         # };
       };
-    })
+    }
     (mkIf cfg.core.enable {
       modules.hardware.core = {
         enable = true;
