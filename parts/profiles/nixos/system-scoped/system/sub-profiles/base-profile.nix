@@ -137,7 +137,7 @@ in {
   };
 
   config = let
-    cfg = config.profiles.system.preset."${[filterfunc]}";
+    cfg = config.profiles.system.preset."${filterfunc}";
   in
     mkIf (filterfunc != {}) (mkMerge [
       (mkIf (cfg.enable && cfg.preset != {}) (mkMerge [
