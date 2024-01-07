@@ -173,7 +173,7 @@ in {
             #   };
             # };
             fonts = {
-              enable = false;
+              enable = true;
               # packages = with pkgs; [
               #   # Icon fonts:
               #   material-symbols
