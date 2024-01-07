@@ -73,9 +73,6 @@ in {
       hardware-cpu-presets."${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
         enable = true;
       };
-      #   "${cfg.profile.cpu.brand}-${cfg.profile.cpu.sub-type}-${builtins.toString cfg.profile.cpu.generation}th" = {
-      #     enable = true;
-      #   };
     })
 
     # hardware-cpu-presets = let

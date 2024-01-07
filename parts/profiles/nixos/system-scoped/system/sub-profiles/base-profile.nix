@@ -5,8 +5,6 @@
   ...
 }:
 with lib; let
-  # filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: v: set.${n}.enable) set));
-  # cfg = config.profiles.system.preset.${filterfunc config.profiles.system.preset};
   filterfunc = set: builtins.head (builtins.attrNames (lib.filterAttrs (n: _: set.${n}.enable) set));
   cfg = config.profiles.system.preset.${filterfunc config.profiles.system.preset};
 
@@ -135,7 +133,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkIf (cfg.enable && (cfg.preset != {})) (mkMerge [
     (mkIf cfg.profile.firmware.enable {
       nixos-modules.system.firmware = {
         inherit (cfg.profile.firmware) enable automatic-updates;
