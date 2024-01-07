@@ -12,7 +12,7 @@ with lib; let
   enabled = lib.filterAttrs (_: config: config.enable) cfg1;
   names = builtins.attrNames enabled;
 
-  filter = lib.filterAttrs (name: _: builtins.elem name cfg1);
+  filter = lib.filterAttrs (name: _: (builtins.elem name cfg1));
   active = builtins.head (builtins.attrNames filter);
   cfg = config.profiles.hardware.preset.${active};
 
