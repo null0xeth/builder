@@ -698,23 +698,7 @@ with lib; let
           peripherals.logitech.enable = cfg.builder.hardware.core.optionals.peripherals.logitech.enable;
         };
       };
-      # profiles.hardware.preset.${cfg.name} = {
-      #   enable = true;
-      #   name = "${cfg.name}";
-      #   profile = {
-      #     inherit (cfg.builder.hardware) cpu;
-      #   };
-      #   core = {
-      #     inherit (cfg.builder.hardware.basics) audio bluetooth storage;
-      #   };
-      #   optionals = {
-      #     inherit (cfg.builder.hardware.functionality) thunderbolt sensors;
-      #     peripherals.logitech = {
-      #       inherit (cfg.builder.hardware.functionality.logitech) enable;
-      #     };
-      #   };
-      # };
-    })
+          })
 
     # Kernel:
     (mkIf cfg.builder.kernel.enable {
@@ -815,7 +799,27 @@ with lib; let
       (mkIf cfg.builder.security.enable (mkMerge [
         {
           profiles.security.preset.${cfg.name} = {
-            inherit (cfg.builder.security) enable modules;
+            enable = cfg.builder.security.enable;
+            name = "${cfg.name}";
+            modules = {
+              agenix.enable = cfg.builder.security.modules.agenix.enable;
+              yubikey = {
+                enable = cfg.builder.security.modules.yubikey.enable;
+                settings = {
+                  configuration = {
+                    idVendor = cfg.builder.security.modules.yubikey.settings.configuration.idVendor;
+                    idProduct = cfg.builder.security.modules.yubikey.settings.configuration.idProduct;
+                  };
+                  udev = {
+                    enable = cfg.builder.security.modules.yubikey.settings.udev.enable;
+                  };
+                  touchDetector = {
+                    enable = cfg.builder.security.modules.yubikey.settings.touchDetector.enable;
+                  };
+                };
+              };
+            };
+            /* inherit (cfg.builder.security) enable modules; */
           };
         }
       ]))
