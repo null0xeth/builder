@@ -148,25 +148,25 @@ in {
   # in
   config = mkIf (cfg != {}) (mkMerge [
     (mkIf cfg.${filterfunc}.enable (mkMerge [
-      (mkIf cfg.profile.firmware.enable {
+      (mkIf cfg.${filterfunc}.profile.firmware.enable {
         nixos-modules.system.firmware = {
-          inherit (cfg.profile.firmware) enable automatic-updates;
+          inherit (cfg.${filterfunc}.profile.firmware) enable automatic-updates;
         };
 
         environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
       })
 
-      (mkIf cfg.fonts.enable {
+      (mkIf cfg.${filterfunc}.fonts.enable {
         fonts = {
           enableDefaultPackages = true;
-          inherit (cfg.fonts) packages;
-          fontconfig.defaultFonts = cfg.fonts.default;
+          inherit (cfg.${filterfunc}.fonts) packages;
+          fontconfig.defaultFonts = cfg.${filterfunc}.fonts.default;
         };
       })
 
-      (mkIf cfg.sysutils.enable {
+      (mkIf cfg.${filterfunc}.sysutils.enable {
         nixos-modules.sysutils = {
-          inherit (cfg.sysutils) enable tools;
+          inherit (cfg.${filterfunc}.sysutils) enable tools;
         };
       })
     ]))
