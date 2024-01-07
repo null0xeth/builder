@@ -16,7 +16,7 @@ with lib; let
   #activePresetNames = builtins.attrValues (builtins.mapAttrs (_: config: config.name) activePresets);
   #cfg = base."${builtins.head (builtins.attrNames allPresets)}";
 
-  filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: cfg1.${name}.enable) cfg1));
+  filter = builtins.head (builtins.attrNames (lib.filterAttrs (name: value: preset.${value}.enable) config.profiles.networking));
   #active = builtins.head (builtins.attrNames filter);
 
   #cfg = config.presets.${active};
