@@ -48,7 +48,7 @@ in {
           logRefusedConnections = lib.mkDefault false;
         };
       };
-      networking.useNetworkd = mkDefault true;
+      networking.useNetworkd = true;
       networking.useDHCP = mkDefault false;
 
       systemd = {
