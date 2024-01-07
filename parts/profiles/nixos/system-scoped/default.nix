@@ -1,6 +1,6 @@
 {
   imports = [
-    ./kernel
+    #./kernel
     #./system
     ./hardware
     ./security
