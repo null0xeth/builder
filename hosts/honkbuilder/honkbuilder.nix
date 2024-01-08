@@ -3,6 +3,12 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
+  serverModules.atticd = {
+    enable = true;
+    credentials = "";
+    deployment.mode = "monolithic";
+  };
+
   roles = {
     workstation.honkbuilder = {
       enable = true;

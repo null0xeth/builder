@@ -4,5 +4,6 @@
     ./nixosConfigurations.nix
     ./byosBuilder.nix
     ./homeManagerModules.nix
+    ./serverModules.nix
   ];
 }

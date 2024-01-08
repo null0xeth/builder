@@ -9,38 +9,30 @@
   # };
 
   inputs = {
-    ##- CORE COMPONENTS -##
+    ###> CORE COMPONENTS <###
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nix.url = "github:nixos/nix";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     byos.url = "github:null0xeth/byos";
     twixvim.url = "github:null0xeth/twixvim";
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    #-> Systems to build for
     systems.url = "github:nix-systems/default";
+    home-manager.url = "github:nix-community/home-manager";
 
-    #-> Age encryption for secrets
+    ###> SERVER COMPONENTS <###
+    attic.url = "github:zhaofengli/attic";
+
+    ###> SECRETS & ENCRYPTION <###
     agenix.url = "github:ryantm/agenix";
+    agenix-rekey.url = "github:oddlama/agenix-rekey";
 
-    #-> Automatic secret rekeying
-    agenix-rekey = {
-      url = "github:oddlama/agenix-rekey";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    #-> Binary caching
+    ###> CACHING <###
     cachix = {
       url = "github:cachix/cachix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    #-> Useful functions for nixos-configurations.
+    ###> OTHER <###
     nh = {
       url = "github:viperML/nh";
       inputs.nixpkgs.follows = "nixpkgs";

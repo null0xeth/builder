@@ -13,7 +13,7 @@ in {
           specialArgs = {
             inherit inputs inputs';
           };
-          modules = sharedModules;
+          modules = sharedModules ++ [self.serverModules.attic];
         });
     };
   };
