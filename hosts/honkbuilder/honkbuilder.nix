@@ -4,10 +4,10 @@
   ];
 
   roles = {
-    workstation.poc = {
+    workstation.honkbuilder = {
       enable = true;
       overrides = {
-        kernelModules = [];
+        kernelModules = ["ahci" "ehci_pci"];
         initrd = {
           availableKernelModules = [
             "uhci_hcd"

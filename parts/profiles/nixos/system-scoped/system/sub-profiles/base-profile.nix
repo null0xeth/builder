@@ -5,19 +5,10 @@
   ...
 }:
 with lib; let
-  # cfg1 = config.profiles.system;
-  # profileNames = attrNames cfg1;
-  # cfg = cfg1.${builtins.head profileNames};
-  # cfg2 = config.profiles;
-  # base = name: (builtins.hasAttr name config.profiles.system.preset);
-  # filter = lib.filterAttrs (n: _: base n);
-  # filterfunc = builtins.head (builtins.attrNames filter);
-  # cfg2 = config.profiles.system.preset."${filterfunc}";
-  # cfg = config.profiles.system.preset;
-  # ....
-  # cfg1 = config.profiles.system;
-  # enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
-  # cfg = config.profiles.system.${builtins.head (builtins.attrNames enabled)};
+  cfg1 = config.profiles.system;
+  enabled = lib.filterAttrs (n: _: cfg1.${n}.enable) cfg1;
+  cfg = config.profiles.system.${builtins.head (builtins.attrNames enabled)};
+
   enableModule = lib.types.submodule {
     options = {
       enable = mkEnableOption "";
@@ -28,31 +19,9 @@ with lib; let
   #   preset = mkOption {
   #     default = {};
   #     type = types.attrsOf (types.submodule ({name, ...}: {
-  firmwareSubmodule = {
-    config,
-    name,
-    ...
-  }: {
+  firmwareSubmodule = {name, ...}: {
     options = {
-      # enable = mkOption {
-      #   type = types.bool;
-      #   default = false;
-      # };
-      # name = mkOption {
-      #   type = types.str;
-      #   description = mdDoc "The slug used to refer to this profile";
-      #   default = "default-hardware-template";
-      # };
-      # profile = mkOption {
-      #   default = {};
-      #   type = types.submodule {
-      #     options = {
-
-      firmware = mkOption {
-        default = {};
-        type = types.submodule {
-          options = {
-            enable = mkEnableOption "the firmware configuration module";
+                  enable = mkEnableOption "the firmware configuration module";
             automatic-updates = mkOption {
               default = {};
               type = types.submodule {
@@ -62,28 +31,10 @@ with lib; let
               };
             };
           };
-          config = mkIf config.enable (mkMerge [
-            {
-              nixos-modules.system.firmware = {
-                inherit (config.firmware) enable automatic-updates;
-              };
-
-              environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-            }
-          ]);
         };
-      };
-    };
-  };
 
-  # fonts = mkOption {
-  #   default = {};
-  #   type = types.submodule {
-  fontsSubmodule = {
-    config,
-    name,
-    ...
-  }: {
+
+  fontsSubmodule = {name, ...}: {
     options = {
       enable = mkEnableOption "the font configuration module";
       packages = mkOption {
@@ -115,25 +66,9 @@ with lib; let
         };
       };
     };
-    config = mkIf config.enable (mkMerge [
-      {
-        fonts = {
-          enableDefaultPackages = true;
-          inherit (config) packages;
-          fontconfig.defaultFonts = {inherit (config) defaults;};
-        };
-      }
-    ]);
   };
 
-  # sysutils = mkOption {
-  #   default = {};
-  #   type = types.submodule {
-  utilsSubmodule = {
-    config,
-    name,
-    ...
-  }: {
+  utilsSubmodule = {name, ...}: {
     options = {
       enable = mkEnableOption "the system utilities module";
       tools = mkOption {
@@ -160,13 +95,6 @@ with lib; let
         };
       };
     };
-    config = mkIf config.enable (mkMerge [
-      {
-        nixos-modules.sysutils = {
-          inherit (config) enable tools;
-        };
-      }
-    ]);
   };
 in {
   imports = [
@@ -175,44 +103,13 @@ in {
     ./submodules
   ];
 
-  # options.profiles.system = {
-  #   enable = mkEnableOption "lol";
-  #   preset = mkOption {
-  #     default = {};
-  #     type = types.attrsOf (types.submodule ({name, ...}: {}));
-  #   };
-  # };
-
-  # config = let
-  #   cfg = let
-  #     namez = builtins.head filterfunc ? "none";
-  #   in
-  #     config.profiles.system.preset."${namez}";
-  #   # // {
-  #   #   preset = "${namez}";
-  #   # };
-  # in
-
   options = {
-    profiles.systemPool = mkOption {
-      type = types.nullOr types.str;
-      readOnly = true;
-    };
-
     profiles.system = mkOption {
       default = {};
       type = with types;
-        attrsOf (submodule ({
-          name,
-          config,
-          ...
-        }: {
+        attrsOf (submodule ({name, ...}: {
           options = {
-            enable = mkOption {
-              type = bool;
-              default = false;
-            };
-
+            enable = mkEnableOption "tba";
             profileName = mkOption {
               type = str;
               default = name;
@@ -223,7 +120,7 @@ in {
                 this sucks lol
               '';
               default = {};
-              type = with types; attrsOf (submodule firmwareSubmodule);
+              type = with types; submodule firmwareSubmodule;
             };
 
             fonts = mkOption {
@@ -231,7 +128,7 @@ in {
                 this sucks aswell
               '';
               default = {};
-              type = with types; attrsOf (submodule fontsSubmodule);
+              type = with types; submodule fontsSubmodule;
             };
 
             sysutils = mkOption {
@@ -239,43 +136,37 @@ in {
                 i wouldnt be suprised if this sucked too.
               '';
               default = {};
-              type = with types; attrsOf (submodule utilsSubmodule);
+              type = with types; submodule utilsSubmodule;
             };
-          };
-          config = {
-            cfg.${name} =
-              {
-                enable = config.enable;
-              }
-              // {
-                inherit (config) profileName firmware fonts sysutils;
-              };
           };
         }));
     };
   };
 
-  # config = mkIf cfg.enable (mkMerge [
-  # (mkIf cfg.firmware.enable {
-  #   nixos-modules.system.firmware = {
-  #     inherit (cfg.firmware) enable automatic-updates;
-  #   };
+  config = mkIf cfg.enable (mkMerge [
+    (mkIf cfg.firmware.enable {
+      nixos-modules.system.firmware = {
+        inherit (cfg.firmware) enable automatic-updates;
+      };
 
-  #   environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
-  # })
+      environment.systemPackages = [pkgs.krew pkgs.jq pkgs.minio-client];
+    })
 
-  #   (mkIf cfg.fonts.enable {
-  #     fonts = {
-  #       enableDefaultPackages = true;
-  #       inherit (cfg.fonts) packages;
-  #       fontconfig.defaultFonts = {inherit (cfg.fonts) defaults;};
-  #     };
-  #   })
+    (mkIf cfg.fonts.enable {
+      fonts = {
+        enableDefaultPackages = true;
+        inherit (cfg.fonts) packages;
+        fontconfig.defaultFonts = {
+		inherit (cfg.fonts.defaults) serif sansSerif monospace emoji;
+	};
+      };
+    })
 
-  #   (mkIf cfg.sysutils.enable {
-  #     nixos-modules.sysutils = {
-  #       inherit (cfg.sysutils) enable tools;
-  #     };
-  #   })
-  # ]);
+    (mkIf cfg.sysutils.enable {
+      nixos-modules.sysutils = {
+        inherit (cfg.sysutils) enable tools;
+      };
+    })
+  ]);
 }
+

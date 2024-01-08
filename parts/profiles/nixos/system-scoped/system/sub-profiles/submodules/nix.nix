@@ -88,7 +88,7 @@ with lib; {
       # maximum number of parallel TCP connections used to fetch imports and binary caches, 0 means no limit
       http-connections = 50;
       # whether to accept nix configuration from a flake without prompting
-      accept-flake-config = false;
+      accept-flake-config = true;
       # execute builds inside cgroups
       use-cgroups = true;
 

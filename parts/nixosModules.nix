@@ -1,24 +1,20 @@
-{inputs, ...}:
-#let
-# sharedModules = with inputs; [
-#   agenix.nixosModules.default
-#   agenix-rekey.nixosModules.agenixRekey
-#   hyprland.nixosModules.default
-#   home-manager.nixosModules.home-manager
-#   nh.nixosModules.default
-#   srvos.nixosModules.mixins-tracing
-# ];
-#in
-{
+{inputs, ...}: let
+  sharedModules = with inputs; [
+    #agenix.nixosModules.default
+    #agenix-rekey.nixosModules.agenixRekey
+    home-manager.nixosModules.home-manager
+    nh.nixosModules.default
+  ];
+in {
   flake.nixosModules = {
-    # extensions = {
-    #   imports = sharedModules;
-    # };
+    extensions = {
+      imports = sharedModules;
+    };
     hosts = {
       imports = [../hosts];
     };
     roles = {
-      imports = [./roles/nixos/workstation/intel/poc.nix];
+      imports = [./roles/nixos/workstation/intel];
     };
     users = {
       imports = [../users];

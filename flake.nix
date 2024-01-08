@@ -1,12 +1,12 @@
 {
-  nixConfig = {
-    extra-substituters = [
-      #"...."
-    ];
-    extra-trusted-public-keys = [
-      #"..."
-    ];
-  };
+  # nixConfig = {
+  #   extra-substituters = [
+  #     #"...."
+  #   ];
+  #   extra-trusted-public-keys = [
+  #     #"..."
+  #   ];
+  # };
 
   inputs = {
     ##- CORE COMPONENTS -##
@@ -15,6 +15,12 @@
     nix.url = "github:nixos/nix";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     byos.url = "github:null0xeth/byos";
+    twixvim.url = "github:null0xeth/twixvim";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     #-> Systems to build for
     systems.url = "github:nix-systems/default";
@@ -31,12 +37,6 @@
     #-> Binary caching
     cachix = {
       url = "github:cachix/cachix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    #-> Dotfiles management
-    home-manager = {
-      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -103,9 +103,7 @@
 
         # Provides the formatter for `nix fmt`
         formatter = pkgs.alejandra;
-      };
-
-      flake = {
+        devShells.default = inputs'.twixvim.devShells.default;
       };
     };
 }

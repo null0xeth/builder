@@ -467,10 +467,7 @@ with lib; let
                 default = {};
                 type = types.submodule {
                   options = {
-                    enable = mkOption {
-                      type = types.bool;
-                      default = false;
-                    };
+                    enable = mkEnableOption "lol";
                     profile = mkOption {
                       default = {};
                       type = types.submodule {
@@ -765,18 +762,18 @@ with lib; let
       # System:
       (mkIf cfg.builder.system.enable (mkMerge [
         {
-          profiles.system.preset.${cfg.name} = {
+          profiles.system.${cfg.name} = {
             enable = true;
             profileName = "${cfg.name}";
-            firmware.${cfg.name} = {
-              inherit (cfg.builder.system.profile.firmware) enable automatic-updates; 
+            firmware = {
+              	   inherit (cfg.builder.system.profile.firmware) enable automatic-updates; 
             };
-            fonts.${cfg.name} = {
-              inherit (cfg.builder.system.fonts) enable packages defaults;
-            };
-            sysutils.${cfg.name} = {
-              inherit (cfg.builder.system.sysutils) enable tools;
-            };
+            fonts = {
+              	   inherit (cfg.builder.system.fonts) enable packages defaults;
+	    };
+            sysutils = {
+              		inherit (cfg.builder.system.sysutils) enable tools;
+	    };
           };
         }]))
 
